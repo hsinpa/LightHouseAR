@@ -20,11 +20,13 @@ namespace Hsinpa.CloudAnchor {
         [SerializeField]
         private GameObject AnchoredObjectPrefab;
 
-        protected AnchorLocateCriteria anchorLocateCriteria = null;
+        protected List<string> anchorIdsToLocate = new List<string>();
+
         protected CloudSpatialAnchor currentCloudAnchor;
         protected CloudSpatialAnchorWatcher currentWatcher;
 
-        public float createProgress;
+        private float _createProgress;
+        public float createProgress => _createProgress;
 
         #region Public Events
         public System.Action<string> OnLogEvent;
@@ -39,7 +41,7 @@ namespace Hsinpa.CloudAnchor {
         {
             if (CloudManager.SessionStatus != null)
             {
-                createProgress = CloudManager.SessionStatus.RecommendedForCreateProgress;
+                _createProgress = CloudManager.SessionStatus.RecommendedForCreateProgress;
             }
         }
 
@@ -55,8 +57,6 @@ namespace Hsinpa.CloudAnchor {
                 CloudManager.Error += CloudManager_Error;
 
                 await CloudManager.CreateSessionAsync();
-
-                anchorLocateCriteria = new AnchorLocateCriteria();
 
                 if (OnCloudAnchorIsSetUp != null)
                     OnCloudAnchorIsSetUp(true);
@@ -78,7 +78,49 @@ namespace Hsinpa.CloudAnchor {
 
             return true;
         }
+
         #region Watch Cloud Anchor
+        protected CloudSpatialAnchorWatcher CreateWatcher(AnchorLocateCriteria anchorLocateCriteria)
+        {
+            if ((CloudManager != null) && (CloudManager.Session != null))
+            {
+                return CloudManager.Session.CreateWatcher(anchorLocateCriteria);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public AnchorLocateCriteria SetAnchorCriteria(string[] defaultAnchorIds, LocateStrategy locateStrategy)
+        {
+            AnchorLocateCriteria anchorLocateCriteria = new AnchorLocateCriteria();
+
+            anchorLocateCriteria.Strategy = locateStrategy;
+
+            anchorLocateCriteria.Identifiers = defaultAnchorIds;
+
+            return anchorLocateCriteria;
+        }
+
+        protected AnchorLocateCriteria SetNearbyAnchor(AnchorLocateCriteria anchorLocateCriteria, CloudSpatialAnchor nearbyAnchor, float DistanceInMeters, int MaxNearAnchorsToFind)
+        {
+            NearAnchorCriteria nac = new NearAnchorCriteria();
+            nac.SourceAnchor = nearbyAnchor;
+            nac.DistanceInMeters = DistanceInMeters;
+            nac.MaxResultCount = MaxNearAnchorsToFind;
+
+            anchorLocateCriteria.NearAnchor = nac;
+
+            return anchorLocateCriteria;
+        }
+
+        public AnchorLocateCriteria SetAnchorCriteriaIDs(AnchorLocateCriteria anchorLocateCriteria, string[] anchorIds)
+        {
+            anchorLocateCriteria.Identifiers = anchorIds;
+
+            return anchorLocateCriteria;
+        }
 
         #endregion
 

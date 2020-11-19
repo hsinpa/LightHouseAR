@@ -131,6 +131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 955667439}
   - component: {fileID: 955667440}
+  - component: {fileID: 955667441}
   m_Layer: 0
   m_Name: CloudAnchor
   m_TagString: Untagged
@@ -171,6 +172,23 @@ MonoBehaviour:
   clientId: 
   tenantId: 
   logLevel: 5
+--- !u!114 &955667441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955667438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d56094c719cd3d444bd81245ecdea043, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spatialAnchorManager: {fileID: 955667440}
+  arCamera: {fileID: 1948624347}
+  AnchoredObjectPrefab: {fileID: 8629200487890894332, guid: 322a8db75aa225d4eb0c6a26188bc28c,
+    type: 3}
+  createProgress: 0
 --- !u!1 &1101816975
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +217,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -549,8 +567,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4966719baa26e4b0e8231a24d9bd491a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FocusMode: 1
-  m_LightEstimationMode: 0
+  m_FocusMode: -1
+  m_LightEstimationMode: -1
   m_AutoFocus: 1
   m_LightEstimation: 0
   m_FacingDirection: 1
