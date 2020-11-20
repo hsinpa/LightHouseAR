@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -121,6 +121,36 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &157047773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 157047774}
+  m_Layer: 0
+  m_Name: Model
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &157047774
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 157047773}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1108637341}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &955667438
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,6 +162,7 @@ GameObject:
   - component: {fileID: 955667439}
   - component: {fileID: 955667440}
   - component: {fileID: 955667441}
+  - component: {fileID: 955667442}
   m_Layer: 0
   m_Name: CloudAnchor
   m_TagString: Untagged
@@ -188,7 +219,21 @@ MonoBehaviour:
   arCamera: {fileID: 1948624347}
   AnchoredObjectPrefab: {fileID: 8629200487890894332, guid: 322a8db75aa225d4eb0c6a26188bc28c,
     type: 3}
-  createProgress: 0
+--- !u!114 &955667442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955667438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db65865f5c4104c43a0c95716b17a73c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightHouseAnchorManager: {fileID: 955667441}
+  numToMake: 5
+  rangeToSearch: 10
 --- !u!1 &1101816975
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,6 +354,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 955667439}
+  - {fileID: 157047774}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -383,6 +429,7 @@ GameObject:
   - component: {fileID: 1381741352}
   - component: {fileID: 1381741355}
   - component: {fileID: 1381741354}
+  - component: {fileID: 1381741356}
   m_Layer: 0
   m_Name: AR Session Origin
   m_TagString: Untagged
@@ -446,6 +493,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RaycastPrefab: {fileID: 0}
+--- !u!114 &1381741356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381741351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AnchorPrefab: {fileID: 0}
 --- !u!1 &1948624343
 GameObject:
   m_ObjectHideFlags: 0

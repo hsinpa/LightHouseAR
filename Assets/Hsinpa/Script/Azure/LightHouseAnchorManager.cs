@@ -6,6 +6,8 @@ using Microsoft.Azure.SpatialAnchors.Unity;
 using UnityEngine.XR.ARFoundation;
 using System.Threading.Tasks;
 using System;
+using Hsinpa.Model;
+using Microsoft.Azure;
 
 namespace Hsinpa.CloudAnchor {
     public class LightHouseAnchorManager : MonoBehaviour
@@ -24,7 +26,7 @@ namespace Hsinpa.CloudAnchor {
 
         protected CloudSpatialAnchor currentCloudAnchor;
         protected CloudSpatialAnchorWatcher currentWatcher;
-
+        private PlatformLocationProvider platformLocationProvider;
         private float _createProgress;
         public float createProgress => _createProgress;
 
@@ -58,6 +60,14 @@ namespace Hsinpa.CloudAnchor {
 
                 await CloudManager.CreateSessionAsync();
 
+                await CloudManager.StartSessionAsync();
+
+                platformLocationProvider = new PlatformLocationProvider();
+
+                CloudManager.Session.LocationProvider = platformLocationProvider;
+
+                SensorPermissionHelper.RequestSensorPermissions();
+
                 if (OnCloudAnchorIsSetUp != null)
                     OnCloudAnchorIsSetUp(true);
 
@@ -79,8 +89,14 @@ namespace Hsinpa.CloudAnchor {
             return true;
         }
 
+        private void ConfigureSensors() {
+            platformLocationProvider.Sensors.GeoLocationEnabled = SensorPermissionHelper.HasGeoLocationPermission();
+            platformLocationProvider.Sensors.WifiEnabled = SensorPermissionHelper.HasWifiPermission();
+            platformLocationProvider.Sensors.BluetoothEnabled = SensorPermissionHelper.HasBluetoothPermission();
+        }
+
         #region Watch Cloud Anchor
-        protected CloudSpatialAnchorWatcher CreateWatcher(AnchorLocateCriteria anchorLocateCriteria)
+        public CloudSpatialAnchorWatcher CreateWatcher(AnchorLocateCriteria anchorLocateCriteria)
         {
             if ((CloudManager != null) && (CloudManager.Session != null))
             {
@@ -103,7 +119,7 @@ namespace Hsinpa.CloudAnchor {
             return anchorLocateCriteria;
         }
 
-        protected AnchorLocateCriteria SetNearbyAnchor(AnchorLocateCriteria anchorLocateCriteria, CloudSpatialAnchor nearbyAnchor, float DistanceInMeters, int MaxNearAnchorsToFind)
+        public AnchorLocateCriteria SetNearbyAnchor(AnchorLocateCriteria anchorLocateCriteria, CloudSpatialAnchor nearbyAnchor, float DistanceInMeters, int MaxNearAnchorsToFind)
         {
             NearAnchorCriteria nac = new NearAnchorCriteria();
             nac.SourceAnchor = nearbyAnchor;
