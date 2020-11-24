@@ -10,16 +10,13 @@ namespace Hsinpa.Input
     public class RaycastInputHandler : MonoBehaviour
     {
         [SerializeField]
-        private GraphicRaycaster canvasRaycaster;
-
-        [SerializeField]
         private ARRaycastManager arRaycastManager;
 
         [SerializeField]
         private ARCameraManager arCamera;
 
         [SerializeField, Range(0.05f, 1f)]
-        private float doubleTapTreshold = 0.1f;
+        private float doubleTapTreshold = 0.2f;
         private float timeRecord;
         private int tapCount = 0;
 
@@ -30,9 +27,12 @@ namespace Hsinpa.Input
         public enum InputType { SingleTap, DoubleTap };
         public System.Action<InputStruct> OnInputEvent;
 
+        private InputStruct _inputStruct;
+
         private void Start()
         {
             eventData = new PointerEventData(EventSystem.current);
+            _inputStruct = new InputStruct();
         }
 
         public Quaternion GetFrontQuaternion(Vector3 hitPoint, Vector3 offset)
@@ -51,7 +51,9 @@ namespace Hsinpa.Input
                 arRaycastResults.Clear();
                 if (CheckIsDoubleTabActivate())
                 {
-                    OnInputEvent(new InputStruct(Vector3.zero, InputType.DoubleTap));
+                    _inputStruct.raycastPosition = Vector3.zero;
+                    _inputStruct.inputType = InputType.DoubleTap;
+                    OnInputEvent(_inputStruct);
                     return;
                 }
 
@@ -64,7 +66,9 @@ namespace Hsinpa.Input
 
                 if (arRaycastResults.Count > 0)
                 {
-                    OnInputEvent(new InputStruct(arRaycastResults[0].pose.position, InputType.SingleTap));
+                    _inputStruct.raycastPosition = arRaycastResults[0].pose.position;
+                    _inputStruct.inputType = InputType.SingleTap;
+                    OnInputEvent(_inputStruct);
                 }
             }
         }

@@ -28,11 +28,25 @@ namespace Hsinpa.CloudAnchor {
         protected CloudSpatialAnchorWatcher currentWatcher;
         private PlatformLocationProvider platformLocationProvider;
         private float _createProgress;
-        public float createProgress => _createProgress;
+        public float createProgress {
+
+            get {
+                return _createProgress;
+            }
+
+            set
+            {
+                if (OnCreateProgressUpdate != null)
+                    OnCreateProgressUpdate(value);
+
+                _createProgress = value;
+            }
+        }
 
         #region Public Events
         public System.Action<string> OnLogEvent;
         public System.Action<bool> OnCloudAnchorIsSetUp;
+        public System.Action<float> OnCreateProgressUpdate;
         #endregion
 
         private void Start() {
@@ -43,8 +57,10 @@ namespace Hsinpa.CloudAnchor {
         {
             if (CloudManager.SessionStatus != null)
             {
-                _createProgress = CloudManager.SessionStatus.RecommendedForCreateProgress;
+                createProgress = CloudManager.SessionStatus.RecommendedForCreateProgress;
             }
+
+            //Debug.Log("_createProgress " + _createProgress);
         }
 
         private async void SetUp() {
@@ -60,13 +76,14 @@ namespace Hsinpa.CloudAnchor {
 
                 await CloudManager.CreateSessionAsync();
 
-                await CloudManager.StartSessionAsync();
+                //await CloudManager.StartSessionAsync();
 
                 platformLocationProvider = new PlatformLocationProvider();
 
                 CloudManager.Session.LocationProvider = platformLocationProvider;
 
                 SensorPermissionHelper.RequestSensorPermissions();
+                ConfigureSensors();
 
                 if (OnCloudAnchorIsSetUp != null)
                     OnCloudAnchorIsSetUp(true);
@@ -218,16 +235,20 @@ namespace Hsinpa.CloudAnchor {
         /// <summary>
         /// Saves the current object anchor to the cloud.
         /// </summary>
-        public async Task SaveCurrentObjectAnchorToCloudAsync(GameObject spawnedObject)
+        public async Task SaveCurrentObjectAnchorToCloudAsync(CloudNativeAnchor nativeAnchor)
         {
-            // Get the cloud-native anchor behavior
-            CloudNativeAnchor cna = spawnedObject.GetComponent<CloudNativeAnchor>();
+            if (!CloudManager.IsSessionStarted) {
+                await CloudManager.StartSessionAsync();
+            }
 
-            // If the cloud portion of the anchor hasn't been created yet, create it
-            if (cna.CloudAnchor == null) { cna.NativeToCloud(); }
+            //// Get the cloud-native anchor behavior
+            //CloudNativeAnchor cna = spawnedObject.GetComponent<CloudNativeAnchor>();
+
+            //// If the cloud portion of the anchor hasn't been created yet, create it
+            if (nativeAnchor.CloudAnchor == null) { nativeAnchor.NativeToCloud(); }
 
             // Get the cloud portion of the anchor
-            CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
+            CloudSpatialAnchor cloudAnchor = nativeAnchor.CloudAnchor;
 
             // In this sample app we delete the cloud anchor explicitly, but here we show how to set an anchor to expire automatically
             cloudAnchor.Expiration = System.DateTimeOffset.Now.AddDays(7);
