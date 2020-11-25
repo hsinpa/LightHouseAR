@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "389133876763",
+    "firebase_url": "https://lighthousear-99fd7.firebaseio.com",
+    "project_id": "lighthousear-99fd7",
+    "storage_bucket": "lighthousear-99fd7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389133876763:android:4d853e06bbfa2fd86402be",
+        "android_client_info": {
+          "package_name": "com.hsinpa.LightHouseAR"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "389133876763-tf1qc0e3lgvvtoaa88chr7nlc1g1jqtq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQkOxQLIYHo8xi_t5UyJKkHYZtnF2kOa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "389133876763-tf1qc0e3lgvvtoaa88chr7nlc1g1jqtq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
