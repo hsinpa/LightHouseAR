@@ -35,6 +35,8 @@ namespace Hsinpa.Controller {
             {
                 ProgressText.text = "Scan Progress : " + progress;
             };
+
+            _lightHouseAnchorManager.OnAnchorIsLocated += OnAnchorIsLocated;
         }
 
         private void OnInputEvent(RaycastInputHandler.InputStruct inputStruct)
@@ -68,8 +70,21 @@ namespace Hsinpa.Controller {
             CloudNativeAnchor cloudNativeAnchor = _currentSpawnObj.GetComponent<CloudNativeAnchor>();
             await _lightHouseAnchorManager.SaveCurrentObjectAnchorToCloudAsync(cloudNativeAnchor);
 
+            Debug.Log("CloudAnchor.Identifier " + cloudNativeAnchor.CloudAnchor.Identifier);
+
+            var criteria = _lightHouseAnchorManager.SetAnchorCriteria(new string[1] { "f7e2ae12-9214-4909-963c-f830a2a1e003" }, LocateStrategy.AnyStrategy);
+            _lightHouseAnchorManager.CreateWatcher(criteria);
+            //_lightHouseAnchorManager.CloudManager.StopSession();
+
             _currentSpawnObj = null;
             SaveBtn.interactable = true;
+        }
+
+        private void OnAnchorIsLocated(AnchorLocatedEventArgs arg) {
+            if (arg.Status == LocateAnchorStatus.Located) {
+                var pose = arg.Anchor.GetPose();
+                _lightHouseAnchorManager.SpawnNewAnchoredObject(pose.position, pose.rotation);
+            }
         }
     }
 }

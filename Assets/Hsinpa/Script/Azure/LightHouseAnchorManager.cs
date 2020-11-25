@@ -47,6 +47,8 @@ namespace Hsinpa.CloudAnchor {
         public System.Action<string> OnLogEvent;
         public System.Action<bool> OnCloudAnchorIsSetUp;
         public System.Action<float> OnCreateProgressUpdate;
+        public System.Action<AnchorLocatedEventArgs> OnAnchorIsLocated;
+
         #endregion
 
         private void Start() {
@@ -246,7 +248,7 @@ namespace Hsinpa.CloudAnchor {
 
             //// If the cloud portion of the anchor hasn't been created yet, create it
             if (nativeAnchor.CloudAnchor == null) { nativeAnchor.NativeToCloud(); }
-
+            
             // Get the cloud portion of the anchor
             CloudSpatialAnchor cloudAnchor = nativeAnchor.CloudAnchor;
 
@@ -319,14 +321,6 @@ namespace Hsinpa.CloudAnchor {
         #endregion
 
         #region Listen CloudManager Events
-        private void CloudManager_AnchorLocated(object sender, AnchorLocatedEventArgs args)
-        {
-            Debug.LogFormat("Anchor recognized as a possible anchor {0} {1}", args.Identifier, args.Status);
-            if (args.Status == LocateAnchorStatus.Located)
-            {
-                // OnCloudAnchorLocated(args);
-            }
-        }
 
         private void CloudManager_LocateAnchorsCompleted(object sender, LocateAnchorsCompletedEventArgs args)
         {
@@ -356,7 +350,13 @@ namespace Hsinpa.CloudAnchor {
         #endregion
 
         #region Listen Watch Events
+        private void CloudManager_AnchorLocated(object sender, AnchorLocatedEventArgs args)
+        {
+            Debug.LogFormat("Anchor recognized as a possible anchor {0} {1}", args.Identifier, args.Status);
 
+            if (OnAnchorIsLocated != null)
+                OnAnchorIsLocated(args);
+        }
         #endregion
     }
 }
