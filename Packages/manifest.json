@@ -6,9 +6,18 @@
       "scopes": [
         "com.microsoft.azure.spatial-anchors-sdk"
       ]
+    },
+
+    {
+      "name": "Game Package Registry by Google",
+      "url": "https://unityregistry-pa.googleapis.com",
+      "scopes": [
+        "com.google"
+      ]
     }
   ],
   "dependencies": {
+    "com.google.firebase.firestore" : "6.16.1",
     "com.microsoft.azure.spatial-anchors-sdk.android": "2.7.0",
     "com.microsoft.azure.spatial-anchors-sdk.ios": "2.7.0",
     "com.unity.collab-proxy": "1.2.16",

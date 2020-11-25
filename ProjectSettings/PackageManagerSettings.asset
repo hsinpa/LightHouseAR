@@ -26,20 +26,26 @@ MonoBehaviour:
     m_Scopes:
     - com.microsoft.azure.spatial-anchors-sdk
     m_IsDefault: 0
-  m_UserSelectedRegistryName: 
+  - m_Id: scoped:Game Package Registry by Google
+    m_Name: Game Package Registry by Google
+    m_Url: https://unityregistry-pa.googleapis.com
+    m_Scopes:
+    - com.google
+    m_IsDefault: 0
+  m_UserSelectedRegistryName: Game Package Registry by Google
   m_UserAddingNewScopedRegistry: 0
   m_RegistryInfoDraft:
     m_ErrorMessage: 
     m_Original:
-      m_Id: scoped:Azure Mixed Reality Services
-      m_Name: Azure Mixed Reality Services
-      m_Url: https://api.bintray.com/npm/microsoft/AzureMixedReality-NPM
+      m_Id: scoped:Game Package Registry by Google
+      m_Name: Game Package Registry by Google
+      m_Url: https://unityregistry-pa.googleapis.com
       m_Scopes:
-      - com.microsoft.azure.spatial-anchors-sdk
+      - com.google
       m_IsDefault: 0
     m_Modified: 0
-    m_Name: Azure Mixed Reality Services
-    m_Url: https://api.bintray.com/npm/microsoft/AzureMixedReality-NPM
+    m_Name: Game Package Registry by Google
+    m_Url: https://unityregistry-pa.googleapis.com
     m_Scopes:
-    - com.microsoft.azure.spatial-anchors-sdk
+    - com.google
     m_SelectedScopeIndex: 0
