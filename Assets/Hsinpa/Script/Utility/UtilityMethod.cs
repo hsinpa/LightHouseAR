@@ -132,6 +132,7 @@ namespace Utility {
 			return d;
 		}
 
+
 		public static async Task DoDelayWork(float p_delay, System.Action p_action)
 		{
 			await Task.Delay(System.TimeSpan.FromSeconds(p_delay));
