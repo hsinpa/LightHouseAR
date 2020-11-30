@@ -13,10 +13,21 @@ namespace Hsinpa.View
         Text semiInfoText;
 
         [SerializeField]
-        ButtonManagerBasic closeBtn;
+        InputField _nameField;
+        public string anchorName => _nameField.text;
+
+        [SerializeField]
+        CustomDropdown tagDropDown;
+        public int tagIndex => tagDropDown.index; 
 
         [SerializeField]
         ButtonManagerBasic confirmBtn;
 
+        public void SetUp(string p_semiInfo, System.Action p_onSaveEvent) {
+            semiInfoText.text = p_semiInfo;
+
+            confirmBtn.clickEvent.RemoveAllListeners();
+            confirmBtn.clickEvent.AddListener(() => p_onSaveEvent());
+        }
     }
 }

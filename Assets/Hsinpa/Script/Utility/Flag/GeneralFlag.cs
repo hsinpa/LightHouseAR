@@ -5,6 +5,10 @@ using UnityEngine;
 public class GeneralFlag
 {
 
+    public class Layer {
+        public const int Anchor = 1 << 9;
+    }
+
     public class Firestore {
         public const string CloudAnchorCol = "CloudAnchors";
         public const string ProjectID_CA = "project_id";
