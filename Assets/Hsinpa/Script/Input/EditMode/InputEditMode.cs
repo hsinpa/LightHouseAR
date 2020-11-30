@@ -26,14 +26,15 @@ namespace LightHouse.Edit {
         public Mode _mode;
 
         InputEditTranslate _inputEditTranslate;
+        InputEditRotate _inputEditRotate;
 
         private RaycastHit[] raycastHits = new RaycastHit[1];
 
         public void Start()
         {
-            _mode = Mode.Translate;
+            _mode = Mode.Idle;
             _inputEditTranslate = new InputEditTranslate();
-            _inputEditTranslate.SetUp(_testObject);
+            _inputEditRotate = new InputEditRotate(_camera);
 
             RegisterHeaderBtnEvent();
         }
@@ -43,8 +44,8 @@ namespace LightHouse.Edit {
             if (_mode == Mode.Translate)
                 _inputEditTranslate.OnUpdate();
 
-            //if (_mode == Mode.Rotation)
-            //    _inputEditTranslate.OnUpdate();
+            if (_mode == Mode.Rotation)
+                _inputEditRotate.OnUpdate();
         }
 
         private bool HasHitPuffObject()
@@ -64,11 +65,14 @@ namespace LightHouse.Edit {
 
             enableTranslationBtn.onClick.AddListener(() =>
             {
+                _inputEditTranslate.SetUp(this._testObject);
+
                 _mode = Mode.Translate;
             });
 
             enableRotationBtn.onClick.AddListener(() =>
             {
+                _inputEditRotate.SetUp(this._testObject);
                 _mode = Mode.Rotation;
             });
 

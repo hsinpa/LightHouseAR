@@ -8,7 +8,7 @@ namespace LightHouse.Edit
     public class InputEditTranslate
     {
         float threshold = 4;
-        float dragSpeed = 0.4f;
+        float dragSpeed = 0.6f;
 
         GameObject targetObject;
 
@@ -56,7 +56,7 @@ namespace LightHouse.Edit
             offSet.z = offSet.y;
             offSet.y = 0;
 
-            targetObject.transform.Translate(offSet);
+            targetObject.transform.position = targetObject.transform.position + (offSet);
         }
 
         public void Reset() { 
