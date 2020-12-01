@@ -132,6 +132,9 @@ namespace Utility {
 			return d;
 		}
 
+		public static string GetRandomIDString() {
+			return System.Guid.NewGuid().ToString().Substring(0, 8);
+		}
 
 		public static async Task DoDelayWork(float p_delay, System.Action p_action)
 		{

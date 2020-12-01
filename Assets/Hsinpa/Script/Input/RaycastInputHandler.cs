@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using LightHouse.Edit;
 using Hsinpa.View;
+using Utility;
 
 namespace Hsinpa.Input
 {
@@ -19,7 +20,8 @@ namespace Hsinpa.Input
         private Camera _camera;
 
         [SerializeField]
-        private InputEditMode lightHouseEditMode;
+        private InputEditMode _lightHouseEditMode;
+        public InputEditMode lightHouseEditMode => _lightHouseEditMode;
 
         [SerializeField]
         private EditHeaderView editHeaderView;
@@ -45,7 +47,7 @@ namespace Hsinpa.Input
             this._camera = arCamera.GetComponent<Camera>();
             eventData = new PointerEventData(EventSystem.current);
 
-            lightHouseEditMode.SetUp(arCamera.GetComponent<Camera>(), editHeaderView);
+            _lightHouseEditMode.SetUp(arCamera.GetComponent<Camera>(), editHeaderView);
             _inputStruct = new InputStruct();
         }
 
@@ -63,7 +65,7 @@ namespace Hsinpa.Input
 
             if (selectedAnchor != null) {
 
-                lightHouseEditMode.OnUpdate();
+                _lightHouseEditMode.OnUpdate();
 
                 return;
             }
@@ -73,11 +75,13 @@ namespace Hsinpa.Input
                 //EXIST AR ANCHOR Detection
                 selectedAnchor = CheckCastOnExistAnchor();
                 if (selectedAnchor != null) {
-                    lightHouseEditMode.SetTargetAnchor(selectedAnchor);
+                    Debug.Log("Hit on anchor");
+                    selectedAnchor.name = UtilityMethod.GetRandomIDString();
+                    _lightHouseEditMode.SetTargetAnchor(selectedAnchor);
+                    LighthouseAR.Instance.Notify(EventFlag.Event.OnAnchorClick, selectedAnchor);
                     return;
                 }
                 
-
                 //UI AND ARPLANE Detection
                 arRaycastResults.Clear();
                 if (CheckIsDoubleTabActivate())
@@ -144,6 +148,9 @@ namespace Hsinpa.Input
             return (hitCount >= 1) ? anchorHits[0].transform.gameObject : null;
         }
 
+        public void ResetRaycaster() {
+            selectedAnchor = null;
+        }
 
         public struct InputStruct
         {

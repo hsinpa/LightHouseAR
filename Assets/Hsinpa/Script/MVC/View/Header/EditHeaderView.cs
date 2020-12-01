@@ -9,6 +9,7 @@ namespace Hsinpa.View {
         [SerializeField]
         private Button HomeBtn;
 
+
         [SerializeField]
         private Text progressbarTxt;
 
@@ -25,9 +26,6 @@ namespace Hsinpa.View {
         [SerializeField]
         private Button RotationBtn;
 
-        [SerializeField]
-        private Button SaveBtn;
-
         public delegate void OnOptionClickEvent(Button btn);
 
         public void SetProgressTxt(string p_progress) {
@@ -38,15 +36,17 @@ namespace Hsinpa.View {
             OptionPanel.gameObject.SetActive(isDisplay);
         }
 
-        public void SetHomeEvent(System.Action HomeBtnEvent) {
+        public void SetHomeEvent(string p_homeName, System.Action HomeBtnEvent) {
+            HomeBtn.GetComponentInChildren<Text>().text = p_homeName;
+
             HomeBtn.onClick.RemoveAllListeners();
             HomeBtn.onClick.AddListener(() => { HomeBtnEvent(); });
         }
 
         public void SetOptionEvent(OnOptionClickEvent moreInfoBtnEvent, OnOptionClickEvent translateBtnEvent, OnOptionClickEvent rotationBtnEvent) {
-            MoreInfoBtn.onClick.RemoveAllListeners();
-            TranslateBtn.onClick.RemoveAllListeners();
-            RotationBtn.onClick.RemoveAllListeners();
+            //MoreInfoBtn.onClick.RemoveAllListeners();
+            //TranslateBtn.onClick.RemoveAllListeners();
+            //RotationBtn.onClick.RemoveAllListeners();
 
             MoreInfoBtn.onClick.AddListener(() => { moreInfoBtnEvent(MoreInfoBtn); });
             TranslateBtn.onClick.AddListener(() => { translateBtnEvent(TranslateBtn); });

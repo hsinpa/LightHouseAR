@@ -27,7 +27,10 @@ namespace Hsinpa.View
             semiInfoText.text = p_semiInfo;
 
             confirmBtn.clickEvent.RemoveAllListeners();
-            confirmBtn.clickEvent.AddListener(() => p_onSaveEvent());
+            confirmBtn.clickEvent.AddListener(() => {
+                p_onSaveEvent();
+                Modals.instance.Close();
+            });
         }
     }
 }

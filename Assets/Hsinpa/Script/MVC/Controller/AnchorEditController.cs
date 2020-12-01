@@ -1,87 +1,73 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hsinpa.Input;
-using Hsinpa.CloudAnchor;
-using UnityEngine.UI;
-using Microsoft.Azure.SpatialAnchors;
-using Microsoft.Azure.SpatialAnchors.Unity;
 using Hsinpa.View;
+using UnityEngine.UI;
+using Hsinpa.Input;
+using System.Runtime.InteropServices;
 
-namespace Hsinpa.Controller {
-    public class AnchorEditController : MonoBehaviour
+namespace Hsinpa.Controller
+{
+    public class AnchorEditController : ObserverPattern.Observer
     {
-        [SerializeField]
-        private RaycastInputHandler _raycastInputHandler;
 
         [SerializeField]
         private EditHeaderView editHeaderView;
 
         [SerializeField]
-        private LightHouseAnchorManager _lightHouseAnchorManager;
+        private RaycastInputHandler _raycastInputHandler;
 
-        private GameObject _currentSpawnObj;
+        private GameObject selectedAnchorObj;
 
-        // Start is called before the first frame update
-        void Start()
+        public override void OnNotify(string p_event, params object[] p_objects)
         {
-            _raycastInputHandler.OnInputEvent += OnInputEvent;
-            //SaveBtn.onClick.AddListener(OnSaveBtnClick);
-
-            _lightHouseAnchorManager.OnCreateProgressUpdate += (float progress) =>
+            switch (p_event)
             {
-                editHeaderView.SetProgressTxt("Scan Progress : " + progress);
-            };
+                case EventFlag.Event.GameStart:
+                    {
+                        Init();
+                    }
+                    break;
 
-            _lightHouseAnchorManager.OnAnchorIsLocated += OnAnchorIsLocated;
+
+                case EventFlag.Event.OnAnchorClick:
+                {
+                    OnAnchorObjClick((GameObject)p_objects[0]);
+                }
+                break;
+            }
         }
 
-        private void OnInputEvent(RaycastInputHandler.InputStruct inputStruct)
+        private void Init()
         {
-            Debug.Log("inputStruct.inputType " + inputStruct.inputType);
-            Debug.Log("raycastPosition " + inputStruct.raycastPosition);
-
-            if (inputStruct.inputType == RaycastInputHandler.InputType.SingleTap) {
-                SpawnObjectOnPos(inputStruct.raycastPosition);
-            }
-
-            //if (inputStruct.inputType == RaycastInputHandler.InputType.DoubleTap)
-            //    canvasHolder.gameObject.SetActive(!canvasHolder.gameObject.activeSelf);
+            editHeaderView.SetOptionEvent(OnMoreInfoClick, OnTranslationClick, OnRotationClick);
         }
 
-        private void SpawnObjectOnPos(Vector3 position)
+        private void OnAnchorObjClick(GameObject anchorObject)
         {
-            if (_currentSpawnObj == null)
-            {
-                _currentSpawnObj = _lightHouseAnchorManager.SpawnNewAnchoredObject(position, Quaternion.identity);
-            } else {
-                _lightHouseAnchorManager.MoveAnchoredObject(_currentSpawnObj, position, Quaternion.identity);
-            }
+            selectedAnchorObj = anchorObject;
+
+            editHeaderView.SetHomeEvent("Back", OnBackBtnClick);
+            editHeaderView.DisplayOption(true);
         }
 
-        private async void OnSaveBtnClick() {
-            if (_currentSpawnObj == null) return;
-
-            //SaveBtn.interactable = false;
-
-            CloudNativeAnchor cloudNativeAnchor = _currentSpawnObj.GetComponent<CloudNativeAnchor>();
-            await _lightHouseAnchorManager.SaveCurrentObjectAnchorToCloudAsync(cloudNativeAnchor);
-
-            Debug.Log("CloudAnchor.Identifier " + cloudNativeAnchor.CloudAnchor.Identifier);
-
-            var criteria = _lightHouseAnchorManager.SetAnchorCriteria(new string[1] { "f7e2ae12-9214-4909-963c-f830a2a1e003" }, LocateStrategy.AnyStrategy);
-            _lightHouseAnchorManager.CreateWatcher(criteria);
-            //_lightHouseAnchorManager.CloudManager.StopSession();
-
-            _currentSpawnObj = null;
-            //SaveBtn.interactable = true;
+        private void OnBackBtnClick() {
+            LighthouseAR.Instance.Notify(EventFlag.Event.OnAnchorEditBack);
         }
 
-        private void OnAnchorIsLocated(AnchorLocatedEventArgs arg) {
-            if (arg.Status == LocateAnchorStatus.Located) {
-                var pose = arg.Anchor.GetPose();
-                _lightHouseAnchorManager.SpawnNewAnchoredObject(pose.position, pose.rotation);
-            }
+        private void OnMoreInfoClick(Button btn) {
+            var anchorInfoModal = Modals.instance.OpenModal<AnchorEditorModal>();
         }
+
+        private void OnTranslationClick(Button btn)
+        {
+
+        }
+
+        private void OnRotationClick(Button btn)
+        {
+
+        }
+
     }
 }
