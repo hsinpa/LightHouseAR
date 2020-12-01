@@ -9,6 +9,9 @@ namespace Hsinpa.View {
         [SerializeField]
         private Button HomeBtn;
 
+        [SerializeField]
+        private Text progressbarTxt;
+
         [Header("Options")]
         [SerializeField]
         private RectTransform OptionPanel;
@@ -22,7 +25,14 @@ namespace Hsinpa.View {
         [SerializeField]
         private Button RotationBtn;
 
-        public delegate System.Action<Button> OnOptionClickEvent();
+        [SerializeField]
+        private Button SaveBtn;
+
+        public delegate void OnOptionClickEvent(Button btn);
+
+        public void SetProgressTxt(string p_progress) {
+            progressbarTxt.text = p_progress;
+        }
 
         public void DisplayOption(bool isDisplay) {
             OptionPanel.gameObject.SetActive(isDisplay);
@@ -38,9 +48,9 @@ namespace Hsinpa.View {
             TranslateBtn.onClick.RemoveAllListeners();
             RotationBtn.onClick.RemoveAllListeners();
 
-            MoreInfoBtn.onClick.AddListener(() => { moreInfoBtnEvent(); });
-            TranslateBtn.onClick.AddListener(() => { translateBtnEvent(); });
-            RotationBtn.onClick.AddListener(() => { rotationBtnEvent(); });
+            MoreInfoBtn.onClick.AddListener(() => { moreInfoBtnEvent(MoreInfoBtn); });
+            TranslateBtn.onClick.AddListener(() => { translateBtnEvent(TranslateBtn); });
+            RotationBtn.onClick.AddListener(() => { rotationBtnEvent(RotationBtn); });
         }
 
 

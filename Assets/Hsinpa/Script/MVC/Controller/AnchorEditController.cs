@@ -6,7 +6,7 @@ using Hsinpa.CloudAnchor;
 using UnityEngine.UI;
 using Microsoft.Azure.SpatialAnchors;
 using Microsoft.Azure.SpatialAnchors.Unity;
-
+using Hsinpa.View;
 
 namespace Hsinpa.Controller {
     public class AnchorEditController : MonoBehaviour
@@ -15,13 +15,10 @@ namespace Hsinpa.Controller {
         private RaycastInputHandler _raycastInputHandler;
 
         [SerializeField]
+        private EditHeaderView editHeaderView;
+
+        [SerializeField]
         private LightHouseAnchorManager _lightHouseAnchorManager;
-
-        [SerializeField]
-        private Button SaveBtn;
-
-        [SerializeField]
-        private Text ProgressText;
 
         private GameObject _currentSpawnObj;
 
@@ -29,11 +26,11 @@ namespace Hsinpa.Controller {
         void Start()
         {
             _raycastInputHandler.OnInputEvent += OnInputEvent;
-            SaveBtn.onClick.AddListener(OnSaveBtnClick);
+            //SaveBtn.onClick.AddListener(OnSaveBtnClick);
 
             _lightHouseAnchorManager.OnCreateProgressUpdate += (float progress) =>
             {
-                ProgressText.text = "Scan Progress : " + progress;
+                editHeaderView.SetProgressTxt("Scan Progress : " + progress);
             };
 
             _lightHouseAnchorManager.OnAnchorIsLocated += OnAnchorIsLocated;
@@ -65,7 +62,7 @@ namespace Hsinpa.Controller {
         private async void OnSaveBtnClick() {
             if (_currentSpawnObj == null) return;
 
-            SaveBtn.interactable = false;
+            //SaveBtn.interactable = false;
 
             CloudNativeAnchor cloudNativeAnchor = _currentSpawnObj.GetComponent<CloudNativeAnchor>();
             await _lightHouseAnchorManager.SaveCurrentObjectAnchorToCloudAsync(cloudNativeAnchor);
@@ -77,7 +74,7 @@ namespace Hsinpa.Controller {
             //_lightHouseAnchorManager.CloudManager.StopSession();
 
             _currentSpawnObj = null;
-            SaveBtn.interactable = true;
+            //SaveBtn.interactable = true;
         }
 
         private void OnAnchorIsLocated(AnchorLocatedEventArgs arg) {

@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
+using LightHouse.Edit;
+using Hsinpa.View;
 
 namespace Hsinpa.Input
 {
@@ -14,6 +16,13 @@ namespace Hsinpa.Input
 
         [SerializeField]
         private ARCameraManager arCamera;
+        private Camera _camera;
+
+        [SerializeField]
+        private InputEditMode lightHouseEditMode;
+
+        [SerializeField]
+        private EditHeaderView editHeaderView;
 
         [SerializeField, Range(0.05f, 1f)]
         private float doubleTapTreshold = 0.2f;
@@ -23,6 +32,8 @@ namespace Hsinpa.Input
         private PointerEventData eventData;
         private List<RaycastResult> raycastResults = new List<RaycastResult>();
         private List<ARRaycastHit> arRaycastResults = new List<ARRaycastHit>();
+        private RaycastHit[] anchorHits = new RaycastHit[1];
+        private GameObject selectedAnchor;
 
         public enum InputType { SingleTap, DoubleTap };
         public System.Action<InputStruct> OnInputEvent;
@@ -31,7 +42,10 @@ namespace Hsinpa.Input
 
         private void Start()
         {
+            this._camera = arCamera.GetComponent<Camera>();
             eventData = new PointerEventData(EventSystem.current);
+
+            lightHouseEditMode.SetUp(arCamera.GetComponent<Camera>(), editHeaderView);
             _inputStruct = new InputStruct();
         }
 
@@ -46,8 +60,25 @@ namespace Hsinpa.Input
 
         private void Update()
         {
+
+            if (selectedAnchor != null) {
+
+                lightHouseEditMode.OnUpdate();
+
+                return;
+            }
+
             if (UnityEngine.Input.GetMouseButtonDown(0) && OnInputEvent != null)
             {
+                //EXIST AR ANCHOR Detection
+                selectedAnchor = CheckCastOnExistAnchor();
+                if (selectedAnchor != null) {
+                    lightHouseEditMode.SetTargetAnchor(selectedAnchor);
+                    return;
+                }
+                
+
+                //UI AND ARPLANE Detection
                 arRaycastResults.Clear();
                 if (CheckIsDoubleTabActivate())
                 {
@@ -102,6 +133,15 @@ namespace Hsinpa.Input
             eventData.position = UnityEngine.Input.mousePosition;
             EventSystem.current.RaycastAll(eventData, raycastResults);
             return raycastResults.Count > 0;
+        }
+
+        private GameObject CheckCastOnExistAnchor()
+        {
+            Ray ray = _camera.ScreenPointToRay(UnityEngine.Input.mousePosition);
+
+            int hitCount = Physics.RaycastNonAlloc(ray, anchorHits, 100, GeneralFlag.Layer.Anchor);
+
+            return (hitCount >= 1) ? anchorHits[0].transform.gameObject : null;
         }
 
 

@@ -3,43 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.UI;
+using Hsinpa.View;
 
 namespace LightHouse.Edit {
     public class InputEditMode : MonoBehaviour
     {
-        [SerializeField]
-        private Camera _camera;
+        private GameObject _targetObject;
 
-        [SerializeField]
-        private GameObject _testObject;
+        private EditHeaderView editHeaderView;
 
-        [SerializeField]
-        private Button showMoreInfoBtn;
-
-        [SerializeField]
-        private Button enableTranslationBtn;
-
-        [SerializeField]
-        private Button enableRotationBtn;
-
-        public enum Mode {Idle, Translate, Rotation }
+        public enum Mode { Idle, Translate, Rotation }
         public Mode _mode;
 
         InputEditTranslate _inputEditTranslate;
         InputEditRotate _inputEditRotate;
 
-        private RaycastHit[] raycastHits = new RaycastHit[1];
-
-        public void Start()
+        public void SetUp(Camera p_camera, EditHeaderView editHeaderView)
         {
+            this.editHeaderView = editHeaderView;
             _mode = Mode.Idle;
             _inputEditTranslate = new InputEditTranslate();
-            _inputEditRotate = new InputEditRotate(_camera);
+            _inputEditRotate = new InputEditRotate(p_camera);
 
             RegisterHeaderBtnEvent();
         }
 
-        public void Update()
+        public void SetTargetAnchor(GameObject p_targetAnchor) {
+            this._targetObject = p_targetAnchor;
+        }
+
+        public void OnUpdate()
         {
             if (_mode == Mode.Translate)
                 _inputEditTranslate.OnUpdate();
@@ -48,36 +41,28 @@ namespace LightHouse.Edit {
                 _inputEditRotate.OnUpdate();
         }
 
-        private bool HasHitPuffObject()
-        {
-            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-
-            int hitCount = Physics.RaycastNonAlloc(ray, raycastHits, 100, GeneralFlag.Layer.Anchor);
-
-            return hitCount > 0;
-        }
-
         private void RegisterHeaderBtnEvent() {
-            showMoreInfoBtn.onClick.AddListener(() =>
+
+            this.editHeaderView.SetOptionEvent(
+            moreInfoBtnEvent: (Button btn) =>
             {
                 _mode = Mode.Idle;
-            });
-
-            enableTranslationBtn.onClick.AddListener(() =>
+            },
+            translateBtnEvent : (Button btn) =>
             {
-                _inputEditTranslate.SetUp(this._testObject);
+                if (_targetObject != null)
+                    _inputEditTranslate.SetUp(this._targetObject);
 
                 _mode = Mode.Translate;
-            });
-
-            enableRotationBtn.onClick.AddListener(() =>
+            },
+            rotationBtnEvent: (Button btn) =>
             {
-                _inputEditRotate.SetUp(this._testObject);
+                if (_targetObject != null)
+                    _inputEditRotate.SetUp(this._targetObject);
+
                 _mode = Mode.Rotation;
-            });
-
-
-
+            }
+            );
         }
 
     }
