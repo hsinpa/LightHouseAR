@@ -23,8 +23,9 @@ namespace Hsinpa.View
         [SerializeField]
         ButtonManagerBasic confirmBtn;
 
-        public void SetUp(string p_semiInfo, System.Action p_onSaveEvent) {
+        public void SetUp(string p_semiInfo, string anchorName, System.Action p_onSaveEvent) {
             semiInfoText.text = p_semiInfo;
+            _nameField.text = anchorName;
 
             confirmBtn.clickEvent.RemoveAllListeners();
             confirmBtn.clickEvent.AddListener(() => {

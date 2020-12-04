@@ -695,7 +695,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2887670467511742175}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -1006,7 +1006,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 38e5075e3e79a15409f3c16dd1e56315, type: 3}
-    m_FontSize: 18
+    m_FontSize: 22
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -1158,10 +1158,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: b930e5cc5cdc9da49b222b1a1a4c2446, type: 3}
-    m_FontSize: 52
+    m_FontSize: 48
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 5
+    m_MinSize: 4
     m_MaxSize: 52
     m_Alignment: 7
     m_AlignByGeometry: 0
@@ -1297,7 +1297,7 @@ RectTransform:
   m_AnchorMin: {x: 0.95373595, y: 0.95426315}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 18.49997, y: 16}
-  m_SizeDelta: {x: 64.55701, y: 57.141724}
+  m_SizeDelta: {x: 49.74292, y: 42.776237}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2887670468587390085
 CanvasRenderer:
@@ -1481,7 +1481,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 20
+  m_Spacing: 40
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1

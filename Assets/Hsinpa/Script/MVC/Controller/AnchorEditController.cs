@@ -5,6 +5,7 @@ using Hsinpa.View;
 using UnityEngine.UI;
 using Hsinpa.Input;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Hsinpa.Controller
 {
@@ -26,6 +27,9 @@ namespace Hsinpa.Controller
                 case EventFlag.Event.GameStart:
                     {
                         Init();
+
+                        Debug.Log(UnityEngine.Input.location.isEnabledByUser);
+                        StartCoroutine(LocationService.StartGPS());
                     }
                     break;
 
@@ -57,6 +61,9 @@ namespace Hsinpa.Controller
 
         private void OnMoreInfoClick(Button btn) {
             var anchorInfoModal = Modals.instance.OpenModal<AnchorEditorModal>();
+            anchorInfoModal.SetUp("None yet", selectedAnchorObj.name, () => { 
+                
+            });
         }
 
         private void OnTranslationClick(Button btn)

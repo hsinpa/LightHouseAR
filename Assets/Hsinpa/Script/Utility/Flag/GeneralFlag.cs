@@ -17,9 +17,9 @@ public class GeneralFlag
         public const string Longitube_CA = "longitube";
         public const string Session_CA = "session";
         public const string Tag_CA = "tag";
-
-
     }
+
+
 
     public class FirestoreFake
     {
