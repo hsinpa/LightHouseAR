@@ -1,4 +1,5 @@
-﻿using Hsinpa.View;
+﻿using Hsinpa.Model;
+using Hsinpa.View;
 using ObserverPattern;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,8 +12,10 @@ public class LighthouseAR : Singleton<LighthouseAR>
 
     private Subject subject;
 
-
     private Observer[] observers = new Observer[0];
+
+    private ModelsManager _modelManager;
+    public ModelsManager modelManager => _modelManager;
 
     private void Awake()
     {
@@ -25,6 +28,11 @@ public class LighthouseAR : Singleton<LighthouseAR>
 
     private void Start()
     {
+        RegisterModels();
+        _modelManager.firestoreModel.OnInit += AppStart;
+    }
+
+    private void AppStart() {
         Notify(EventFlag.Event.GameStart);
     }
 
@@ -50,6 +58,11 @@ public class LighthouseAR : Singleton<LighthouseAR>
         {
             subject.addObserver(observer);
         }
+    }
+
+    private void RegisterModels() {
+        _modelManager = transform.Find("Model").GetComponent<ModelsManager>();
+        _modelManager.SetUp();
     }
 
 

@@ -18,7 +18,7 @@ namespace Hsinpa.View
 
         [SerializeField]
         CustomDropdown tagDropDown;
-        public int tagIndex => tagDropDown.index; 
+        public GeneralFlag.AnchorType tagIndex => (GeneralFlag.AnchorType) tagDropDown.index; 
 
         [SerializeField]
         ButtonManagerBasic confirmBtn;

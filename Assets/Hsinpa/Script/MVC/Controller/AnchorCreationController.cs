@@ -87,6 +87,8 @@ namespace Hsinpa.Controller {
 
         private void SpawnObjectOnPos(Vector3 position)
         {
+            position.y = position.y + _lightHouseAnchorManager.AnchoredObjectPrefab.meshBounds.extents.y * _lightHouseAnchorManager.AnchoredObjectPrefab.transform.localScale.x;
+
             if (_currentSpawnObj == null)
             {
                 _currentSpawnObj = _lightHouseAnchorManager.SpawnNewAnchoredObject(position, Quaternion.identity);

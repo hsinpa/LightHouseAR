@@ -37,7 +37,7 @@ namespace Hsinpa.Input
         private RaycastHit[] anchorHits = new RaycastHit[1];
         private GameObject selectedAnchor;
 
-        public enum InputType { SingleTap, DoubleTap };
+        public enum InputType { SingleTap, DoubleTap, None };
         public System.Action<InputStruct> OnInputEvent;
 
         private InputStruct _inputStruct;
@@ -83,7 +83,6 @@ namespace Hsinpa.Input
                 }
                 
                 //UI AND ARPLANE Detection
-                arRaycastResults.Clear();
                 if (CheckIsDoubleTabActivate())
                 {
                     _inputStruct.raycastPosition = Vector3.zero;
@@ -97,12 +96,9 @@ namespace Hsinpa.Input
                     return;
                 }
 
-                arRaycastManager.Raycast(UnityEngine.Input.mousePosition, arRaycastResults, UnityEngine.XR.ARSubsystems.TrackableType.PlaneWithinPolygon);
-
-                if (arRaycastResults.Count > 0)
+                _inputStruct = CheckPlaneIsCast();
+                if (_inputStruct.inputType == InputType.SingleTap)
                 {
-                    _inputStruct.raycastPosition = arRaycastResults[0].pose.position;
-                    _inputStruct.inputType = InputType.SingleTap;
                     OnInputEvent(_inputStruct);
                 }
             }
@@ -137,6 +133,29 @@ namespace Hsinpa.Input
             eventData.position = UnityEngine.Input.mousePosition;
             EventSystem.current.RaycastAll(eventData, raycastResults);
             return raycastResults.Count > 0;
+        }
+
+        private InputStruct CheckPlaneIsCast() {
+            _inputStruct.inputType = InputType.None;
+
+#if UNITY_EDITOR
+            Ray ray = _camera.ScreenPointToRay(UnityEngine.Input.mousePosition);
+
+            int hitCount = Physics.RaycastNonAlloc(ray, anchorHits, 100, GeneralFlag.Layer.Plane);
+            if (hitCount > 0) {
+                _inputStruct.inputType = InputType.SingleTap;
+                _inputStruct.raycastPosition = anchorHits[0].point;
+            }
+#else
+            arRaycastResults.Clear();
+            bool hasHit = arRaycastManager.Raycast(UnityEngine.Input.mousePosition, arRaycastResults, UnityEngine.XR.ARSubsystems.TrackableType.PlaneWithinPolygon);
+            if (hasHit) {
+                _inputStruct.inputType = InputType.SingleTap;
+                _inputStruct.raycastPosition = arRaycastResults[0].pose.position;
+            }
+#endif
+
+            return _inputStruct;
         }
 
         private GameObject CheckCastOnExistAnchor()

@@ -4,8 +4,11 @@ using UnityEngine;
 using Hsinpa.View;
 using UnityEngine.UI;
 using Hsinpa.Input;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.Azure.SpatialAnchors.Unity;
+using Hsinpa.CloudAnchor;
+using Microsoft.Azure.SpatialAnchors;
+using Firebase.Firestore;
 
 namespace Hsinpa.Controller
 {
@@ -18,6 +21,9 @@ namespace Hsinpa.Controller
         [SerializeField]
         private RaycastInputHandler _raycastInputHandler;
 
+        [SerializeField]
+        private LightHouseAnchorManager _lightHouseAnchorManager;
+
         private GameObject selectedAnchorObj;
 
         public override void OnNotify(string p_event, params object[] p_objects)
@@ -29,7 +35,8 @@ namespace Hsinpa.Controller
                         Init();
 
                         Debug.Log(UnityEngine.Input.location.isEnabledByUser);
-                        StartCoroutine(LocationService.StartGPS());
+
+                        LocationService.GetGPS(this, true, null);
                     }
                     break;
 
@@ -61,8 +68,15 @@ namespace Hsinpa.Controller
 
         private void OnMoreInfoClick(Button btn) {
             var anchorInfoModal = Modals.instance.OpenModal<AnchorEditorModal>();
-            anchorInfoModal.SetUp("None yet", selectedAnchorObj.name, () => { 
-                
+
+            LocationService.GetGPS(this, true, (LocationService.LocationInfo info) => {
+
+                string project_name = "Lighthouse";
+                string semiMsg = string.Format("Project name: {0}, Longitude: {1}; Latitude: {2}", project_name, info.longitude, info.latitude);
+
+                anchorInfoModal.SetUp(semiMsg, selectedAnchorObj.name, () => {
+                    OnSaveBtnClick(info, anchorInfoModal.tagIndex);
+                });
             });
         }
 
@@ -74,6 +88,32 @@ namespace Hsinpa.Controller
         private void OnRotationClick(Button btn)
         {
 
+        }
+
+        private async void OnSaveBtnClick(LocationService.LocationInfo info, GeneralFlag.AnchorType anchorType)
+        {
+            if (selectedAnchorObj == null) return;
+
+            CloudNativeAnchor cloudNativeAnchor = selectedAnchorObj.GetComponent<CloudNativeAnchor>();
+            await _lightHouseAnchorManager.SaveCurrentObjectAnchorToCloudAsync(cloudNativeAnchor);
+
+            Debug.Log("CloudAnchor.Identifier " + cloudNativeAnchor.CloudAnchor.Identifier);
+
+            CloudAnchorFireData fireData = new CloudAnchorFireData() {
+                _id = cloudNativeAnchor.CloudAnchor.Identifier,
+                geopoint = new GeoPoint(info.latitude, info.longitude),
+                name = System.Guid.NewGuid().ToString(),
+                project_id = GeneralFlag.FirestoreFake.ProjectID_FAKE,
+                user_id = GeneralFlag.FirestoreFake.USER_ID,
+                session = GeneralFlag.FirestoreFake.SESSION_FAKE,
+                tag = (int)anchorType
+            };
+
+            //var criteria = _lightHouseAnchorManager.SetAnchorCriteria(new string[1] { "f7e2ae12-9214-4909-963c-f830a2a1e003" }, LocateStrategy.AnyStrategy);
+            //_lightHouseAnchorManager.CreateWatcher(criteria);
+            //_lightHouseAnchorManager.CloudManager.StopSession();
+
+            selectedAnchorObj = null;
         }
 
     }

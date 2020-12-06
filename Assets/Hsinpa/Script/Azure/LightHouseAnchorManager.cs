@@ -20,7 +20,8 @@ namespace Hsinpa.CloudAnchor {
         private ARCameraManager arCamera;
 
         [SerializeField]
-        private GameObject AnchoredObjectPrefab;
+        private LightHouseAnchorMesh _AnchoredObjectPrefab;
+        public LightHouseAnchorMesh AnchoredObjectPrefab => this._AnchoredObjectPrefab;
 
         protected List<string> anchorIdsToLocate = new List<string>();
 
@@ -169,7 +170,7 @@ namespace Hsinpa.CloudAnchor {
         public GameObject SpawnNewAnchoredObject(Vector3 worldPos, Quaternion worldRot)
         {
             // Create the prefab
-            GameObject newGameObject = GameObject.Instantiate(AnchoredObjectPrefab, worldPos, worldRot);
+            GameObject newGameObject = GameObject.Instantiate(_AnchoredObjectPrefab.gameObject, worldPos, worldRot);
 
             // Attach a cloud-native anchor behavior to help keep cloud
             // and native anchors in sync.

@@ -6,6 +6,7 @@ public class GeneralFlag
 {
 
     public class Layer {
+        public const int Plane = 1 << 8;
         public const int Anchor = 1 << 9;
     }
 
@@ -19,11 +20,16 @@ public class GeneralFlag
         public const string Tag_CA = "tag";
     }
 
-
+    public enum AnchorType { 
+        Position,
+        Text
+    }
 
     public class FirestoreFake
     {
         public const string ProjectID_FAKE = "Test";
         public const string SESSION_FAKE = "FakeLocation_01";
+        public const string USER_ID = "admin";
+
     }
 }

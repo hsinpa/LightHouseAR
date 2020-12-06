@@ -6,6 +6,7 @@ using Firebase.Firestore;
 using Firebase;
 using System.Threading.Tasks;
 using System.Linq;
+using Hsinpa.CloudAnchor;
 
 namespace Hsinpa.Model {
     public class FirestoreModel
@@ -107,6 +108,11 @@ namespace Hsinpa.Model {
             }
 
             return colSnapshot.Documents.ToList();
+        }
+
+        public async Task SaveAnchorData(CloudAnchorFireData fireData) {
+            DocumentReference docRef = db.Collection(GeneralFlag.Firestore.CloudAnchorCol).Document(fireData._id);
+            await docRef.SetAsync(fireData);
         }
 
         public void UnRegisterAll()
