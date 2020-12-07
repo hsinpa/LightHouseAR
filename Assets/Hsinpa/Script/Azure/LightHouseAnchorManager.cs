@@ -345,7 +345,7 @@ namespace Hsinpa.CloudAnchor {
 
         private void CloudManager_LogDebug(object sender, OnLogDebugEventArgs args)
         {
-            Debug.Log(args.Message);
+            //Debug.Log(args.Message);
         }
 
         #endregion

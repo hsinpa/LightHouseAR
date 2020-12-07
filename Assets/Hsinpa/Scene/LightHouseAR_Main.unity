@@ -226,7 +226,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &373953276
 Transform:
   m_ObjectHideFlags: 0
@@ -405,6 +405,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ARAnchorPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 8629200487890894332, guid: 322a8db75aa225d4eb0c6a26188bc28c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 322a8db75aa225d4eb0c6a26188bc28c, type: 3}
@@ -750,6 +755,7 @@ MonoBehaviour:
   _raycastInputHandler: {fileID: 1858445731}
   editHeaderView: {fileID: 135055449}
   _lightHouseAnchorManager: {fileID: 955667441}
+  anchorWorldHolder: {fileID: 173697489}
 --- !u!114 &1218219879
 MonoBehaviour:
   m_ObjectHideFlags: 0

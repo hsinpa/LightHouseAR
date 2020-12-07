@@ -26,6 +26,8 @@ namespace Hsinpa.Controller
 
         private GameObject selectedAnchorObj;
 
+        private Model.FirestoreModel _fireStoreModel;
+
         public override void OnNotify(string p_event, params object[] p_objects)
         {
             switch (p_event)
@@ -51,6 +53,7 @@ namespace Hsinpa.Controller
 
         private void Init()
         {
+            _fireStoreModel = LighthouseAR.Instance.modelManager.firestoreModel;
             editHeaderView.SetOptionEvent(OnMoreInfoClick, OnTranslationClick, OnRotationClick);
         }
 
@@ -108,6 +111,10 @@ namespace Hsinpa.Controller
                 session = GeneralFlag.FirestoreFake.SESSION_FAKE,
                 tag = (int)anchorType
             };
+
+            await _fireStoreModel.SaveAnchorData(fireData);
+
+            Debug.Log("Save Ready");
 
             //var criteria = _lightHouseAnchorManager.SetAnchorCriteria(new string[1] { "f7e2ae12-9214-4909-963c-f830a2a1e003" }, LocateStrategy.AnyStrategy);
             //_lightHouseAnchorManager.CreateWatcher(criteria);
