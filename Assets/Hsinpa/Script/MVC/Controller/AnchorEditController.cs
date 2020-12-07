@@ -79,8 +79,28 @@ namespace Hsinpa.Controller
 
                 anchorInfoModal.SetUp(semiMsg, selectedAnchorObj.name, () => {
                     OnSaveBtnClick(info, anchorInfoModal.tagIndex);
+                }, () => {
+                    anchorInfoModal.Show(false);
+                    var dialogue = Modals.instance.OpenModal<DialogueModal>();
+
+                    dialogue.SetDialogue(StringDataset.EditAnchor.DeleteAnchorTitle, StringDataset.EditAnchor.DeleteAnchorContent, new string[] {
+                        StringDataset.Dialogue.Confirm, StringDataset.Dialogue.Cancel
+                    }, (int index) => {
+
+                        anchorInfoModal.Show(true);
+
+                        if (index == 0) {
+                            OnAnchorRemoveClick();
+                            Modals.instance.Close();
+                        }
+                    });
+
                 });
             });
+        }
+
+        private void OnAnchorRemoveClick() { 
+        
         }
 
         private void OnTranslationClick(Button btn)
@@ -113,8 +133,6 @@ namespace Hsinpa.Controller
             };
 
             await _fireStoreModel.SaveAnchorData(fireData);
-
-            Debug.Log("Save Ready");
 
             //var criteria = _lightHouseAnchorManager.SetAnchorCriteria(new string[1] { "f7e2ae12-9214-4909-963c-f830a2a1e003" }, LocateStrategy.AnyStrategy);
             //_lightHouseAnchorManager.CreateWatcher(criteria);

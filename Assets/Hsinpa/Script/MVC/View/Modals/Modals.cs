@@ -63,10 +63,10 @@ namespace Hsinpa.View
                     targetModal = modal;
                     targetModal.Show(true);
                 }
-                else
-                {
-                    modal.Show(false);
-                }
+                //else
+                //{
+                //    modal.Show(false);
+                //}
             }
 
             int modalIndex = openModals.FindIndex(x => x.GetType() == typeof(T));

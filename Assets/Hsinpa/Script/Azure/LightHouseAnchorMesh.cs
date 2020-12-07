@@ -10,5 +10,8 @@ namespace Hsinpa.CloudAnchor
         private MeshFilter meshFilter;
 
         public Bounds meshBounds => meshFilter.sharedMesh.bounds;
+
+        public CloudAnchorFireData CloudAnchorFireData;
+        public bool dataIsSet => CloudAnchorFireData != null;
     }
 }

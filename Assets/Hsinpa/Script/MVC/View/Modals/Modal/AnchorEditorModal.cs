@@ -11,7 +11,6 @@ namespace Hsinpa.View
     {
         [SerializeField]
         Text semiInfoText;
-
         [SerializeField]
         InputField _nameField;
         public string anchorName => _nameField.text;
@@ -23,7 +22,10 @@ namespace Hsinpa.View
         [SerializeField]
         ButtonManagerBasic confirmBtn;
 
-        public void SetUp(string p_semiInfo, string anchorName, System.Action p_onSaveEvent) {
+        [SerializeField]
+        ButtonManagerBasic deleteBtn;
+
+        public void SetUp(string p_semiInfo, string anchorName, System.Action p_onSaveEvent, System.Action p_onRemoveEvent) {
             semiInfoText.text = p_semiInfo;
             _nameField.text = anchorName;
 
@@ -31,6 +33,12 @@ namespace Hsinpa.View
             confirmBtn.clickEvent.AddListener(() => {
                 p_onSaveEvent();
                 Modals.instance.Close();
+            });
+
+            deleteBtn.clickEvent.RemoveAllListeners();
+            deleteBtn.clickEvent.AddListener(() => {
+                if (p_onRemoveEvent != null)
+                    p_onRemoveEvent();
             });
         }
     }

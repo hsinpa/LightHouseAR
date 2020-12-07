@@ -87,7 +87,6 @@ namespace Hsinpa.Model {
             if (!isValid) return null;
 
             var animalRef = db.Collection(collection);
-            Query query = animalRef.WhereEqualTo("State", "CA");
 
             QuerySnapshot colSnapshot = await animalRef.GetSnapshotAsync();
             //animalRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>

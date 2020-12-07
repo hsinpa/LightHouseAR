@@ -11,7 +11,7 @@ namespace Hsinpa.View
         private Button CloseBtn;
 
         /// <summary>
-        /// Don't call this function, except from Modal.cs
+        /// Don't call this function, except from Modal.cs, Unless you are author
         /// </summary>
         /// <param name="isShow"></param>
         public override void Show(bool isShow)
