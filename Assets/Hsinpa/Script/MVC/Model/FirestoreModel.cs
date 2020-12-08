@@ -12,7 +12,7 @@ namespace Hsinpa.Model {
     public class FirestoreModel
     {
         #region Event
-        public System.Action OnInit;
+        public System.Action<bool> OnInit;
         public System.Action<List<DocumentSnapshot>> OnFireBaseDocEvent;
         #endregion
 
@@ -32,11 +32,12 @@ namespace Hsinpa.Model {
                 if (dependencyStatus != DependencyStatus.Available)
                 {
                     Debug.LogError("Could not resolve all Firebase dependencies: " + dependencyStatus);
+                    OnInit(false);
                 }
                 else
                 {
                     if (OnInit != null)
-                        OnInit();
+                        OnInit(true);
                 }
             });
         }

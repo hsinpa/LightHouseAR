@@ -15,7 +15,7 @@ public class FirestorePlayground : MonoBehaviour
         firestoreModel.OnInit += OnFirebaseReady;
     }
 
-    void OnFirebaseReady() {
+    void OnFirebaseReady(bool isSuccess) {
         FireRequest();
     }
 

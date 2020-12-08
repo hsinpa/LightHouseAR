@@ -1,4 +1,5 @@
-﻿using Hsinpa.Model;
+﻿using Hsinpa.CloudAnchor;
+using Hsinpa.Model;
 using Hsinpa.View;
 using ObserverPattern;
 using System.Collections;
@@ -8,6 +9,9 @@ using UnityEngine;
 
 public class LighthouseAR : Singleton<LighthouseAR>
 {
+    [SerializeField]
+    private LightHouseAnchorManager _LightHouseAnchorManager;
+
     protected LighthouseAR() { } // guarantee this will be always a singleton only - can't use the constructor!
 
     private Subject subject;
@@ -16,6 +20,9 @@ public class LighthouseAR : Singleton<LighthouseAR>
 
     private ModelsManager _modelManager;
     public ModelsManager modelManager => _modelManager;
+
+    private int readyPipeline = 0;
+    private int targetReadyPipeline = 2;
 
     private void Awake()
     {
@@ -26,14 +33,20 @@ public class LighthouseAR : Singleton<LighthouseAR>
         Init();
     }
 
-    private void Start()
+    private  void Start()
     {
         RegisterModels();
+
         _modelManager.firestoreModel.OnInit += AppStart;
+        _LightHouseAnchorManager.OnCloudAnchorIsSetUp += AppStart;
+
+        _LightHouseAnchorManager.SetUp();
     }
 
-    private void AppStart() {
-        Notify(EventFlag.Event.GameStart);
+    private void AppStart(bool success) {
+        readyPipeline++;
+        if (targetReadyPipeline <= readyPipeline)
+            Notify(EventFlag.Event.GameStart);
     }
 
     public void Notify(string entity, params object[] objects)

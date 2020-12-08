@@ -16,13 +16,16 @@ public class LocationService
         mono.StartCoroutine(StartGPS((bool isSuccess) => {
             LocationInfo location = new LocationInfo();
             location.isSuccess = isSuccess;
-            location.longitude = Input.location.lastData.longitude;
-            location.latitude = Input.location.lastData.latitude;
+
+            if (isSuccess) {
+                location.longitude = Input.location.lastData.longitude;
+                location.latitude = Input.location.lastData.latitude;
+
+                cacheInfo = location;
+            }
 
             if (callback != null)
                 callback(location);
-
-            cacheInfo = location;
         }));    
     }
 

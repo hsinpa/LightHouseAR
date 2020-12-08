@@ -52,10 +52,6 @@ namespace Hsinpa.CloudAnchor {
 
         #endregion
 
-        private void Start() {
-            SetUp();
-        }
-
         private void Update()
         {
             if (CloudManager.SessionStatus != null)
@@ -66,35 +62,47 @@ namespace Hsinpa.CloudAnchor {
             //Debug.Log("_createProgress " + _createProgress);
         }
 
-        private async void SetUp() {
+        public async void SetUp() {
 
-            bool hasPassCheck = SanityCheckAccessConfiguration();
+            try
+            {
+                bool hasPassCheck = SanityCheckAccessConfiguration();
 
-            if (hasPassCheck) {
-                CloudManager.SessionUpdated += CloudManager_SessionUpdated;
-                CloudManager.AnchorLocated += CloudManager_AnchorLocated;
-                CloudManager.LocateAnchorsCompleted += CloudManager_LocateAnchorsCompleted;
-                CloudManager.LogDebug += CloudManager_LogDebug;
-                CloudManager.Error += CloudManager_Error;
+                if (hasPassCheck)
+                {
+                    CloudManager.SessionUpdated += CloudManager_SessionUpdated;
+                    CloudManager.AnchorLocated += CloudManager_AnchorLocated;
+                    CloudManager.LocateAnchorsCompleted += CloudManager_LocateAnchorsCompleted;
+                    CloudManager.LogDebug += CloudManager_LogDebug;
+                    CloudManager.Error += CloudManager_Error;
 
-                await CloudManager.CreateSessionAsync();
+                    await CloudManager.CreateSessionAsync();
 
-                //await CloudManager.StartSessionAsync();
+                    //await CloudManager.StartSessionAsync();
 
-                platformLocationProvider = new PlatformLocationProvider();
+                    platformLocationProvider = new PlatformLocationProvider();
 
-                CloudManager.Session.LocationProvider = platformLocationProvider;
+                    CloudManager.Session.LocationProvider = platformLocationProvider;
 
-                SensorPermissionHelper.RequestSensorPermissions();
-                ConfigureSensors();
+                    SensorPermissionHelper.RequestSensorPermissions();
+                    ConfigureSensors();
+
+                    if (OnCloudAnchorIsSetUp != null)
+                        OnCloudAnchorIsSetUp(true);
+
+                    return;
+                }
+                else {
+                    if (OnCloudAnchorIsSetUp != null)
+                        OnCloudAnchorIsSetUp(true);
+                }
+            }
+            catch {
+                Debug.Log("No Azure Spatial allow");
 
                 if (OnCloudAnchorIsSetUp != null)
-                    OnCloudAnchorIsSetUp(true);
-
-                return;
+                    OnCloudAnchorIsSetUp(false);
             }
-            if (OnCloudAnchorIsSetUp != null)
-                OnCloudAnchorIsSetUp(false);
         }
 
         public bool SanityCheckAccessConfiguration()
@@ -128,7 +136,7 @@ namespace Hsinpa.CloudAnchor {
             }
         }
 
-        public AnchorLocateCriteria SetAnchorCriteria(string[] defaultAnchorIds, LocateStrategy locateStrategy)
+        public AnchorLocateCriteria GetAnchorCriteria(string[] defaultAnchorIds, LocateStrategy locateStrategy)
         {
             AnchorLocateCriteria anchorLocateCriteria = new AnchorLocateCriteria();
 

@@ -69,6 +69,7 @@ namespace Hsinpa.Controller
 
         private void OnBackBtnClick() {
             LighthouseAR.Instance.Notify(EventFlag.Event.OnAnchorEditBack);
+            selectedAnchorObj = null;
         }
 
         private void OnMoreInfoClick(EditHeaderButton btn) {
@@ -92,8 +93,8 @@ namespace Hsinpa.Controller
                             anchorInfoModal.Show(true);
 
                             if (index == 0) {
-                                OnAnchorRemoveClick();
                                 Modals.instance.Close();
+                                OnAnchorRemoveClick();
                             }
                         });
 
@@ -104,6 +105,9 @@ namespace Hsinpa.Controller
         private void OnAnchorRemoveClick() {
             if (selectedAnchorObj != null) {
                 _ = _fireStoreModel.DeleteCollection(GeneralFlag.Firestore.CloudAnchorCol, selectedAnchorObj.CloudAnchorFireData._id);
+                _ = _lightHouseAnchorManager.RemoveCloudAnchor(selectedAnchorObj.CloudNativeAnchor.CloudAnchor);
+                _lightHouseAnchorView.RemoveAnchorMesh(selectedAnchorObj.CloudAnchorFireData._id);
+                OnBackBtnClick();
             }
         }
 
@@ -137,10 +141,6 @@ namespace Hsinpa.Controller
             };
 
             await _fireStoreModel.SaveAnchorData(GeneralFlag.Firestore.CloudAnchorCol, fireData);
-
-            //var criteria = _lightHouseAnchorManager.SetAnchorCriteria(new string[1] { "f7e2ae12-9214-4909-963c-f830a2a1e003" }, LocateStrategy.AnyStrategy);
-            //_lightHouseAnchorManager.CreateWatcher(criteria);
-            //_lightHouseAnchorManager.CloudManager.StopSession();
 
             selectedAnchorObj = null;
         }

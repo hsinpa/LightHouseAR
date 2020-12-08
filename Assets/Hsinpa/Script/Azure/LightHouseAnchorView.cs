@@ -55,7 +55,10 @@ namespace Hsinpa.CloudAnchor
                 string[] anchorIds = anchorObjs.FindAll(x => x.tag == (int)GeneralFlag.AnchorType.Position).
                                                 Select(x => x._id).ToArray();
 
-                _anchorLocateCriteria = lightHouseAnchorManager.SetAnchorCriteria(anchorIds, LocateStrategy.AnyStrategy);
+                foreach (string id in anchorIds)
+                    Debug.Log("AnchorID " + id);
+
+                _anchorLocateCriteria = lightHouseAnchorManager.GetAnchorCriteria(anchorIds, LocateStrategy.AnyStrategy);
 
                 await lightHouseAnchorManager.CloudManager.StartSessionAsync();
 
@@ -66,7 +69,7 @@ namespace Hsinpa.CloudAnchor
         private void CloudManager_AnchorLocated(object sender, AnchorLocatedEventArgs args)
         {
             Debug.LogFormat("Anchor recognized as a possible anchor {0} {1}", args.Identifier, args.Status);
-            if (args.Status == LocateAnchorStatus.Located)
+            if (args.Status == LocateAnchorStatus.Located && CheckAnchorDuplication(args.Identifier))
             {
                 UnityDispatcher.InvokeOnAppThread(() =>
                 {
@@ -79,16 +82,14 @@ namespace Hsinpa.CloudAnchor
                     anchorPose = currentCloudAnchor.GetPose();
 #endif
                     var spawnObject = lightHouseAnchorManager.SpawnNewAnchoredObject(anchorPose.position, anchorPose.rotation);
-                    var cloudSpatialAnchor = spawnObject.GetComponent<CloudSpatialAnchor>();
                     LightHouseAnchorMesh anchorMesh = spawnObject.GetComponent<LightHouseAnchorMesh>();
 
-
-                    anchorMesh.CloudAnchorFireData = anchorObjs.Find(x => x._id == cloudSpatialAnchor.Identifier);
+                    anchorMesh.CloudAnchorFireData = anchorObjs.Find(x => x._id == currentCloudAnchor.Identifier);
                     RegisterNewAnchorMesh(anchorMesh);
 
                     if (anchorFoundLength == 1)
                     {
-                        _ = DoNeighboringPassAsync(cloudSpatialAnchor);
+                        //_ = DoNeighboringPassAsync(currentCloudAnchor);
                     }
                 });
             }
@@ -107,24 +108,25 @@ namespace Hsinpa.CloudAnchor
             // OnCloudLocateAnchorsCompleted(args);
         }
 
-        public bool RegisterNewAnchorMesh(LightHouseAnchorMesh anchorMesh) {
-            int i = anchorMeshList.Count(x => x.CloudAnchorFireData._id == anchorMesh.CloudAnchorFireData._id);
+        public bool CheckAnchorDuplication(string p_id) {
+            int i = anchorMeshList.FindIndex(x => x.CloudAnchorFireData._id == p_id);
+            return (i < 0);
+        }
 
-            if (i < 0) {
-                anchorMeshList.Add(anchorMesh);
-                anchorMesh.transform.SetParent(anchorWorldHolder);
-            }
+        public int RegisterNewAnchorMesh(LightHouseAnchorMesh anchorMesh) {
+            anchorMeshList.Add(anchorMesh);
+            anchorMesh.transform.SetParent(anchorWorldHolder);
 
-            return i < 0;
+            return anchorMeshList.Count;
         }
 
         public bool RemoveAnchorMesh(string anchorID) {
-            int i = anchorMeshList.Count(x => x.CloudAnchorFireData._id == anchorID);
+            int i = anchorMeshList.FindIndex(x => x.CloudAnchorFireData._id == anchorID);
 
             if (i >= 0) {
                 var deleteMesh = anchorMeshList[i];
                 anchorMeshList.RemoveAt(i);
-                Utility.UtilityMethod.SafeDestroy(deleteMesh);
+                Utility.UtilityMethod.SafeDestroy(deleteMesh.gameObject);
             }
 
             return i >= 0;
