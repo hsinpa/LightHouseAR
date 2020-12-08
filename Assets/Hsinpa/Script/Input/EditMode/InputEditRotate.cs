@@ -60,7 +60,7 @@ public class InputEditRotate
     {
         Vector3 currentStandPoint = Input.mousePosition;
         float direction = (currentStandPoint - lastStandPoint).x;
-        direction = Mathf.Clamp(direction, -5, 5);
+        direction = Mathf.Clamp(direction, -3, 3);
 
         Vector3 rotation = new Vector3(0, direction, 0);
 

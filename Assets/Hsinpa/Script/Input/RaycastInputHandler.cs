@@ -7,6 +7,8 @@ using UnityEngine.XR.ARFoundation;
 using LightHouse.Edit;
 using Hsinpa.View;
 using Utility;
+using Hsinpa.Controller;
+using Hsinpa.CloudAnchor;
 
 namespace Hsinpa.Input
 {
@@ -75,11 +77,15 @@ namespace Hsinpa.Input
                 //EXIST AR ANCHOR Detection
                 selectedAnchor = CheckCastOnExistAnchor();
                 if (selectedAnchor != null) {
-                    Debug.Log("Hit on anchor");
-                    selectedAnchor.name = UtilityMethod.GetRandomIDString();
-                    _lightHouseEditMode.SetTargetAnchor(selectedAnchor);
-                    LighthouseAR.Instance.Notify(EventFlag.Event.OnAnchorClick, selectedAnchor);
-                    return;
+
+                    var lighthouseMesh = selectedAnchor.GetComponent<LightHouseAnchorMesh>();
+                    if (lighthouseMesh != null) {
+                        Debug.Log("Hit on anchor");
+                        selectedAnchor.name = UtilityMethod.GetRandomIDString();
+                        _lightHouseEditMode.SetTargetAnchor(selectedAnchor);
+                        LighthouseAR.Instance.Notify(EventFlag.Event.OnAnchorClick, lighthouseMesh);
+                        return;
+                    }
                 }
                 
                 //UI AND ARPLANE Detection

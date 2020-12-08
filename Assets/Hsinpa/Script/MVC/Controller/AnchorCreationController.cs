@@ -23,11 +23,13 @@ namespace Hsinpa.Controller {
         [SerializeField]
         private Transform anchorWorldHolder;
 
-        private GameObject _currentSpawnObj;
+        private LightHouseAnchorMesh _currentSpawnObj;
+        private LightHouseAnchorView _lightHouseAnchorView;
 
         // Start is called before the first frame update
         void Start()
         {
+            _lightHouseAnchorView = GetComponent<LightHouseAnchorView>();
             _raycastInputHandler.OnInputEvent += OnInputEvent;
             //SaveBtn.onClick.AddListener(OnSaveBtnClick);
 
@@ -45,23 +47,15 @@ namespace Hsinpa.Controller {
         {
             switch (p_event)
             {
-                case EventFlag.Event.OnAnchorClick:
-                    {
-                        OnAnchorObjClick((GameObject)p_objects[0]);
-                    }
-                    break;
-
                 case EventFlag.Event.OnAnchorEditBack:
                     {
+                        _currentSpawnObj = null;
                         SetHeaderView();
                     }
                     break;
             }
         }
 
-        private void OnAnchorObjClick(GameObject anchorObject) { 
-            
-        }
 
         private void SetHeaderView() {
 
@@ -94,10 +88,11 @@ namespace Hsinpa.Controller {
 
             if (_currentSpawnObj == null)
             {
-                _currentSpawnObj = _lightHouseAnchorManager.SpawnNewAnchoredObject(position, Quaternion.identity);
+                _currentSpawnObj = _lightHouseAnchorManager.SpawnNewAnchoredObject(position, Quaternion.identity).GetComponent<LightHouseAnchorMesh>();
+                _lightHouseAnchorView.RegisterNewAnchorMesh(_currentSpawnObj);
                 _currentSpawnObj.transform.SetParent(anchorWorldHolder);
             } else {
-                _lightHouseAnchorManager.MoveAnchoredObject(_currentSpawnObj, position, Quaternion.identity);
+                _lightHouseAnchorManager.MoveAnchoredObject(_currentSpawnObj.gameObject, position, Quaternion.identity);
             }
         }
 

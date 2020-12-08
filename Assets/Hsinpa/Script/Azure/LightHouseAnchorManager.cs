@@ -215,6 +215,10 @@ namespace Hsinpa.CloudAnchor {
             // Get the cloud-native anchor behavior
             CloudNativeAnchor cna = objectToMove.GetComponent<CloudNativeAnchor>();
 
+            if (cloudSpatialAnchor == null) {
+                cloudSpatialAnchor = cna.CloudAnchor;
+            }
+
             // Warn and exit if the behavior is missing
             if (cna == null)
             {
@@ -233,6 +237,10 @@ namespace Hsinpa.CloudAnchor {
                 // No. Just set the pose.
                 cna.SetPose(worldPos, worldRot);
             }
+        }
+
+        public async Task RemoveCloudAnchor(CloudSpatialAnchor cloudSpatialAnchor) {
+            await CloudManager.DeleteAnchorAsync(cloudSpatialAnchor);
         }
 
         /// <summary>

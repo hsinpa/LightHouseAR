@@ -20,7 +20,11 @@ namespace Hsinpa.CloudAnchor
         [SerializeField, Range(1, 30)]
         private int rangeToSearch = 15;
 
+        [SerializeField]
+        private Transform anchorWorldHolder;
+
         private List<CloudAnchorFireData> anchorObjs = new List<CloudAnchorFireData>();
+        private List<LightHouseAnchorMesh> anchorMeshList = new List<LightHouseAnchorMesh>();
         
         private AnchorLocateCriteria _anchorLocateCriteria;
         private CloudSpatialAnchorWatcher _cloudWatcher;
@@ -75,10 +79,16 @@ namespace Hsinpa.CloudAnchor
                     anchorPose = currentCloudAnchor.GetPose();
 #endif
                     var spawnObject = lightHouseAnchorManager.SpawnNewAnchoredObject(anchorPose.position, anchorPose.rotation);
+                    var cloudSpatialAnchor = spawnObject.GetComponent<CloudSpatialAnchor>();
+                    LightHouseAnchorMesh anchorMesh = spawnObject.GetComponent<LightHouseAnchorMesh>();
+
+
+                    anchorMesh.CloudAnchorFireData = anchorObjs.Find(x => x._id == cloudSpatialAnchor.Identifier);
+                    RegisterNewAnchorMesh(anchorMesh);
 
                     if (anchorFoundLength == 1)
                     {
-                        _ = DoNeighboringPassAsync(spawnObject.GetComponent<CloudSpatialAnchor>());
+                        _ = DoNeighboringPassAsync(cloudSpatialAnchor);
                     }
                 });
             }
@@ -95,6 +105,29 @@ namespace Hsinpa.CloudAnchor
         private void CloudManager_LocateAnchorsCompleted(object sender, LocateAnchorsCompletedEventArgs args)
         {
             // OnCloudLocateAnchorsCompleted(args);
+        }
+
+        public bool RegisterNewAnchorMesh(LightHouseAnchorMesh anchorMesh) {
+            int i = anchorMeshList.Count(x => x.CloudAnchorFireData._id == anchorMesh.CloudAnchorFireData._id);
+
+            if (i < 0) {
+                anchorMeshList.Add(anchorMesh);
+                anchorMesh.transform.SetParent(anchorWorldHolder);
+            }
+
+            return i < 0;
+        }
+
+        public bool RemoveAnchorMesh(string anchorID) {
+            int i = anchorMeshList.Count(x => x.CloudAnchorFireData._id == anchorID);
+
+            if (i >= 0) {
+                var deleteMesh = anchorMeshList[i];
+                anchorMeshList.RemoveAt(i);
+                Utility.UtilityMethod.SafeDestroy(deleteMesh);
+            }
+
+            return i >= 0;
         }
 
         private async Task<List<CloudAnchorFireData>> LoadAnchorPoints() {

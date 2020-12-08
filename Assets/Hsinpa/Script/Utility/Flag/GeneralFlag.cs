@@ -27,6 +27,7 @@ public class GeneralFlag
 
     public class FirestoreFake
     {
+        public const string ProjectID_EDITOR = "TestEDITOR";
         public const string ProjectID_FAKE = "Test";
         public const string SESSION_FAKE = "FakeLocation_01";
         public const string USER_ID = "admin";

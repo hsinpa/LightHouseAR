@@ -29,6 +29,7 @@ namespace LightHouse.Edit {
         }
 
         public void SetTargetAnchor(GameObject p_targetAnchor) {
+            _mode = Mode.Idle;
             this._targetObject = p_targetAnchor;
         }
 
@@ -44,18 +45,18 @@ namespace LightHouse.Edit {
         private void RegisterHeaderBtnEvent() {
 
             this.editHeaderView.SetOptionEvent(
-            moreInfoBtnEvent: (Button btn) =>
+            moreInfoBtnEvent: (EditHeaderButton btn) =>
             {
                 _mode = Mode.Idle;
             },
-            translateBtnEvent : (Button btn) =>
+            translateBtnEvent : (EditHeaderButton btn) =>
             {
                 if (_targetObject != null)
                     _inputEditTranslate.SetUp(this._targetObject);
 
                 _mode = Mode.Translate;
             },
-            rotationBtnEvent: (Button btn) =>
+            rotationBtnEvent: (EditHeaderButton btn) =>
             {
                 if (_targetObject != null)
                     _inputEditRotate.SetUp(this._targetObject);

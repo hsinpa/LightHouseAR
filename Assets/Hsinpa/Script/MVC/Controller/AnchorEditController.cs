@@ -24,9 +24,10 @@ namespace Hsinpa.Controller
         [SerializeField]
         private LightHouseAnchorManager _lightHouseAnchorManager;
 
-        private GameObject selectedAnchorObj;
+        private LightHouseAnchorMesh selectedAnchorObj;
 
         private Model.FirestoreModel _fireStoreModel;
+        private LightHouseAnchorView _lightHouseAnchorView;
 
         public override void OnNotify(string p_event, params object[] p_objects)
         {
@@ -45,7 +46,7 @@ namespace Hsinpa.Controller
 
                 case EventFlag.Event.OnAnchorClick:
                 {
-                    OnAnchorObjClick((GameObject)p_objects[0]);
+                    OnAnchorObjClick((LightHouseAnchorMesh)p_objects[0]);
                 }
                 break;
             }
@@ -53,11 +54,12 @@ namespace Hsinpa.Controller
 
         private void Init()
         {
+            _lightHouseAnchorView = GetComponent<LightHouseAnchorView>();
             _fireStoreModel = LighthouseAR.Instance.modelManager.firestoreModel;
             editHeaderView.SetOptionEvent(OnMoreInfoClick, OnTranslationClick, OnRotationClick);
         }
 
-        private void OnAnchorObjClick(GameObject anchorObject)
+        private void OnAnchorObjClick(LightHouseAnchorMesh anchorObject)
         {
             selectedAnchorObj = anchorObject;
 
@@ -69,7 +71,7 @@ namespace Hsinpa.Controller
             LighthouseAR.Instance.Notify(EventFlag.Event.OnAnchorEditBack);
         }
 
-        private void OnMoreInfoClick(Button btn) {
+        private void OnMoreInfoClick(EditHeaderButton btn) {
             var anchorInfoModal = Modals.instance.OpenModal<AnchorEditorModal>();
 
             LocationService.GetGPS(this, true, (LocationService.LocationInfo info) => {
@@ -77,38 +79,40 @@ namespace Hsinpa.Controller
                 string project_name = "Lighthouse";
                 string semiMsg = string.Format("Project name: {0}, Longitude: {1}; Latitude: {2}", project_name, info.longitude, info.latitude);
 
-                anchorInfoModal.SetUp(semiMsg, selectedAnchorObj.name, () => {
+                anchorInfoModal.SetUp(semiMsg, selectedAnchorObj.CloudAnchorFireData.name, () => {
                     OnSaveBtnClick(info, anchorInfoModal.tagIndex);
                 }, () => {
                     anchorInfoModal.Show(false);
                     var dialogue = Modals.instance.OpenModal<DialogueModal>();
 
                     dialogue.SetDialogue(StringDataset.EditAnchor.DeleteAnchorTitle, StringDataset.EditAnchor.DeleteAnchorContent, new string[] {
-                        StringDataset.Dialogue.Confirm, StringDataset.Dialogue.Cancel
-                    }, (int index) => {
+                            StringDataset.Dialogue.Confirm, StringDataset.Dialogue.Cancel
+                        }, (int index) => {
 
-                        anchorInfoModal.Show(true);
+                            anchorInfoModal.Show(true);
 
-                        if (index == 0) {
-                            OnAnchorRemoveClick();
-                            Modals.instance.Close();
-                        }
-                    });
+                            if (index == 0) {
+                                OnAnchorRemoveClick();
+                                Modals.instance.Close();
+                            }
+                        });
 
                 });
             });
         }
 
-        private void OnAnchorRemoveClick() { 
-            _fireStoreModel.DeleteCollection(GeneralFlag.Firestore.CloudAnchorCol)
+        private void OnAnchorRemoveClick() {
+            if (selectedAnchorObj != null) {
+                _ = _fireStoreModel.DeleteCollection(GeneralFlag.Firestore.CloudAnchorCol, selectedAnchorObj.CloudAnchorFireData._id);
+            }
         }
 
-        private void OnTranslationClick(Button btn)
+        private void OnTranslationClick(EditHeaderButton btn)
         {
 
         }
 
-        private void OnRotationClick(Button btn)
+        private void OnRotationClick(EditHeaderButton btn)
         {
 
         }

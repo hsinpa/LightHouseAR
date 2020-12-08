@@ -9,7 +9,6 @@ namespace Hsinpa.View {
         [SerializeField]
         private Button HomeBtn;
 
-
         [SerializeField]
         private Text progressbarTxt;
 
@@ -18,15 +17,15 @@ namespace Hsinpa.View {
         private RectTransform OptionPanel;
 
         [SerializeField]
-        private Button MoreInfoBtn;
+        private EditHeaderButton MoreInfoBtn;
 
         [SerializeField]
-        private Button TranslateBtn;
+        private EditHeaderButton TranslateBtn;
 
         [SerializeField]
-        private Button RotationBtn;
+        private EditHeaderButton RotationBtn;
 
-        public delegate void OnOptionClickEvent(Button btn);
+        public delegate void OnOptionClickEvent(EditHeaderButton btn);
 
         public void SetProgressTxt(string p_progress) {
             progressbarTxt.text = p_progress;
@@ -37,6 +36,7 @@ namespace Hsinpa.View {
         }
 
         public void SetHomeEvent(string p_homeName, System.Action HomeBtnEvent) {
+            IsButtonActivate(null);
             HomeBtn.GetComponentInChildren<Text>().text = p_homeName;
 
             HomeBtn.onClick.RemoveAllListeners();
@@ -48,11 +48,15 @@ namespace Hsinpa.View {
             //TranslateBtn.onClick.RemoveAllListeners();
             //RotationBtn.onClick.RemoveAllListeners();
 
-            MoreInfoBtn.onClick.AddListener(() => { moreInfoBtnEvent(MoreInfoBtn); });
-            TranslateBtn.onClick.AddListener(() => { translateBtnEvent(TranslateBtn); });
-            RotationBtn.onClick.AddListener(() => { rotationBtnEvent(RotationBtn); });
+            MoreInfoBtn.Button.onClick.AddListener(() => {  moreInfoBtnEvent(MoreInfoBtn); });
+            TranslateBtn.Button.onClick.AddListener(() => { IsButtonActivate(TranslateBtn); translateBtnEvent(TranslateBtn); });
+            RotationBtn.Button.onClick.AddListener(() => { IsButtonActivate(RotationBtn); rotationBtnEvent(RotationBtn); });
         }
 
+        public void IsButtonActivate(EditHeaderButton activateBtn) {
+            TranslateBtn.ActivateHint(TranslateBtn == activateBtn);
+            RotationBtn.ActivateHint(RotationBtn == activateBtn);
+        }
 
     }
 }

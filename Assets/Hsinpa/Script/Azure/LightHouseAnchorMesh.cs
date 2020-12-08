@@ -11,7 +11,8 @@ namespace Hsinpa.CloudAnchor
 
         public Bounds meshBounds => meshFilter.sharedMesh.bounds;
 
-        public CloudAnchorFireData CloudAnchorFireData;
-        public bool dataIsSet => CloudAnchorFireData != null;
+        public CloudAnchorFireData CloudAnchorFireData = CloudAnchorFireData.GetDefault();
+
+        public bool dataIsSet => (CloudAnchorFireData != null && CloudAnchorFireData.project_id != GeneralFlag.FirestoreFake.ProjectID_EDITOR);
     }
 }
