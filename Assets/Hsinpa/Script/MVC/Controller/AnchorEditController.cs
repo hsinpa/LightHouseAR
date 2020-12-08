@@ -100,7 +100,7 @@ namespace Hsinpa.Controller
         }
 
         private void OnAnchorRemoveClick() { 
-        
+            _fireStoreModel.DeleteCollection(GeneralFlag.Firestore.CloudAnchorCol)
         }
 
         private void OnTranslationClick(Button btn)
@@ -132,7 +132,7 @@ namespace Hsinpa.Controller
                 tag = (int)anchorType
             };
 
-            await _fireStoreModel.SaveAnchorData(fireData);
+            await _fireStoreModel.SaveAnchorData(GeneralFlag.Firestore.CloudAnchorCol, fireData);
 
             //var criteria = _lightHouseAnchorManager.SetAnchorCriteria(new string[1] { "f7e2ae12-9214-4909-963c-f830a2a1e003" }, LocateStrategy.AnyStrategy);
             //_lightHouseAnchorManager.CreateWatcher(criteria);

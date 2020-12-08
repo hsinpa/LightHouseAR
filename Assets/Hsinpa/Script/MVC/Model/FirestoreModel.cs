@@ -109,8 +109,13 @@ namespace Hsinpa.Model {
             return colSnapshot.Documents.ToList();
         }
 
-        public async Task SaveAnchorData(CloudAnchorFireData fireData) {
-            DocumentReference docRef = db.Collection(GeneralFlag.Firestore.CloudAnchorCol).Document(fireData._id);
+        public async Task DeleteCollection(string collection, string _id) {
+            DocumentReference docRef = db.Collection(collection).Document(_id);
+            await docRef.DeleteAsync();
+        }
+
+        public async Task SaveAnchorData(string collection, CloudAnchorFireData fireData) {
+            DocumentReference docRef = db.Collection(collection).Document(fireData._id);
             await docRef.SetAsync(fireData);
         }
 
