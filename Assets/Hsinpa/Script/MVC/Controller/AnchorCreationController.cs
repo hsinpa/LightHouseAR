@@ -62,6 +62,10 @@ namespace Hsinpa.Controller {
             editHeaderView.SetHomeEvent("Home", () =>
             {
                 Debug.Log("Back to Menu, Which is not ready yet");
+            },
+            () => {
+                var sessionModal = Modals.instance.OpenModal<SessionEditorModal>();
+                sessionModal.SetUp();
             });
 
             editHeaderView.DisplayOption(false);

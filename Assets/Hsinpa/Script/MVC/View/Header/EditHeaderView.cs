@@ -20,6 +20,9 @@ namespace Hsinpa.View {
         private EditHeaderButton MoreInfoBtn;
 
         [SerializeField]
+        private EditHeaderButton EditSessionBtn;
+
+        [SerializeField]
         private EditHeaderButton TranslateBtn;
 
         [SerializeField]
@@ -32,15 +35,22 @@ namespace Hsinpa.View {
         }
 
         public void DisplayOption(bool isDisplay) {
-            OptionPanel.gameObject.SetActive(isDisplay);
+            //OptionPanel.gameObject.SetActive(isDisplay);
+
+            MoreInfoBtn.gameObject.SetActive(isDisplay);
+            TranslateBtn.gameObject.SetActive(isDisplay);
+            RotationBtn.gameObject.SetActive(isDisplay);
         }
 
-        public void SetHomeEvent(string p_homeName, System.Action HomeBtnEvent) {
+        public void SetHomeEvent(string p_homeName, System.Action HomeBtnEvent, System.Action EditSessionEvent) {
             IsButtonActivate(null);
             HomeBtn.GetComponentInChildren<Text>().text = p_homeName;
 
             HomeBtn.onClick.RemoveAllListeners();
             HomeBtn.onClick.AddListener(() => { HomeBtnEvent(); });
+
+            EditSessionBtn.Button.onClick.RemoveAllListeners();
+            EditSessionBtn.Button.onClick.AddListener(() => { EditSessionEvent(); });
         }
 
         public void SetOptionEvent(OnOptionClickEvent moreInfoBtnEvent, OnOptionClickEvent translateBtnEvent, OnOptionClickEvent rotationBtnEvent) {

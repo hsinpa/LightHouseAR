@@ -21,7 +21,8 @@ public class GeneralFlag
     }
 
     public enum AnchorType { 
-        Position,
+        AnchorMain,
+        AnchorSub,
         Text
     }
 
@@ -32,5 +33,15 @@ public class GeneralFlag
         public const string SESSION_FAKE = "FakeLocation_01";
         public const string USER_ID = "admin";
 
+    }
+
+    public class PlayerPref {
+        public const string Sessions = "playerpref@sessions";
+
+    }
+
+    [System.Serializable]
+    public struct SessionStruct {
+        public string name;
     }
 }

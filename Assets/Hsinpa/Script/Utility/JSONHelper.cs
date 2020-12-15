@@ -11,6 +11,13 @@ public static class JsonHelper
         return wrapper.Items;
     }
 
+    public static T[] FromJsonWithWrapper<T>(string json)
+    {
+        Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(json);
+        return wrapper.Items;
+    }
+
+
     public static string ToJson<T>(T[] array)
     {
         Wrapper<T> wrapper = new Wrapper<T>();

@@ -63,7 +63,10 @@ namespace Hsinpa.Controller
         {
             selectedAnchorObj = anchorObject;
 
-            editHeaderView.SetHomeEvent("Back", OnBackBtnClick);
+            editHeaderView.SetHomeEvent("Back", OnBackBtnClick, () => {
+                var sessionModal = Modals.instance.OpenModal<SessionEditorModal>();
+                sessionModal.SetUp();
+            });
             editHeaderView.DisplayOption(true);
         }
 
