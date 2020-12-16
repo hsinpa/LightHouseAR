@@ -52,7 +52,7 @@ namespace Hsinpa.CloudAnchor
             anchorObjs = await LoadAnchorPoints();
 
             if (anchorObjs != null && anchorObjs.Count > 0) {
-                string[] anchorIds = anchorObjs.FindAll(x => x.tag == (int)GeneralFlag.AnchorType.AnchorMain).
+                string[] anchorIds = anchorObjs.FindAll(x => x.tag == (int)GeneralFlag.AnchorType.AnchorMain || x.tag == (int)GeneralFlag.AnchorType.AnchorSub).
                                                 Select(x => x._id).ToArray();
 
                 foreach (string id in anchorIds)

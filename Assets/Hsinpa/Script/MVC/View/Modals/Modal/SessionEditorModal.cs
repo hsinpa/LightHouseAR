@@ -42,7 +42,7 @@ namespace Hsinpa.View
         }
 
         private void RenderSessionTag() {
-            GeneralFlag.SessionStruct[] sessions = GetSessionData();
+            GeneralFlag.SessionStruct[] sessions = PlayerPrefHelper.GetSessionData();
             sessionStructList = sessions.ToList();
 
             UtilityMethod.ClearChildObject(sessionTagHolder);
@@ -58,7 +58,7 @@ namespace Hsinpa.View
             sessionStructList.Add(newSession);
 
             InsertSert(newSession);
-            SaveToPlayPref(sessionStructList.ToArray());
+            PlayerPrefHelper.SaveSessionData(sessionStructList.ToArray());
         }
 
         private void InsertSert(GeneralFlag.SessionStruct sessionStruct) {
@@ -75,24 +75,9 @@ namespace Hsinpa.View
 
                     UtilityMethod.SafeDestroy(sessionObject);
 
-                    SaveToPlayPref(sessionStructList.ToArray());
+                    PlayerPrefHelper.SaveSessionData(sessionStructList.ToArray());
                 }
             });
         }
-
-        private void SaveToPlayPref(GeneralFlag.SessionStruct[] sessions) {
-            PlayerPrefs.SetString(GeneralFlag.PlayerPref.Sessions, JsonHelper.ToJson(sessions));
-            PlayerPrefs.Save();
-        }
-
-        public GeneralFlag.SessionStruct[] GetSessionData() {
-            string sessionRaw = PlayerPrefs.GetString(GeneralFlag.PlayerPref.Sessions);
-
-            if (string.IsNullOrEmpty(sessionRaw))
-                return new GeneralFlag.SessionStruct[0];
-
-            return JsonHelper.FromJsonWithWrapper<GeneralFlag.SessionStruct>(sessionRaw);
-        }
-
     }
 }

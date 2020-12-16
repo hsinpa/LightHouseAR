@@ -83,8 +83,8 @@ namespace Hsinpa.Controller
                 string project_name = "Lighthouse";
                 string semiMsg = string.Format("Project name: {0}, Longitude: {1}; Latitude: {2}", project_name, info.longitude, info.latitude);
 
-                anchorInfoModal.SetUp(semiMsg, selectedAnchorObj.CloudAnchorFireData.name, () => {
-                    OnSaveBtnClick(info, anchorInfoModal.tagIndex);
+                anchorInfoModal.SetUp(semiMsg, selectedAnchorObj.CloudAnchorFireData.name, PlayerPrefHelper.GetSessionData() ,() => {
+                    OnSaveBtnClick(info, anchorInfoModal.tagIndex, anchorInfoModal.selectedSessionString);
                 }, () => {
                     anchorInfoModal.Show(false);
                     var dialogue = Modals.instance.OpenModal<DialogueModal>();
@@ -124,7 +124,7 @@ namespace Hsinpa.Controller
 
         }
 
-        private async void OnSaveBtnClick(LocationService.LocationInfo info, GeneralFlag.AnchorType anchorType)
+        private async void OnSaveBtnClick(LocationService.LocationInfo info, GeneralFlag.AnchorType anchorType, string sessionStr)
         {
             if (selectedAnchorObj == null) return;
 
@@ -139,7 +139,7 @@ namespace Hsinpa.Controller
                 name = System.Guid.NewGuid().ToString(),
                 project_id = GeneralFlag.FirestoreFake.ProjectID_FAKE,
                 user_id = GeneralFlag.FirestoreFake.USER_ID,
-                session = GeneralFlag.FirestoreFake.SESSION_FAKE,
+                session = sessionStr,
                 tag = (int)anchorType
             };
 
