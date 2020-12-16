@@ -60,6 +60,7 @@ namespace Hsinpa.View
         }
 
         private void SetSessionDropdown(GeneralFlag.SessionStruct[] p_availableSessions) {
+            sessionDropDown.dropdownItems.Clear();
             foreach (GeneralFlag.SessionStruct session in p_availableSessions) {
                 sessionDropDown.CreateNewItemFast(session.name, sessionDropdownSprite);
             }
