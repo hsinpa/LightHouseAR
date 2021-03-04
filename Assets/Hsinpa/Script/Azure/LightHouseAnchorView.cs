@@ -60,7 +60,11 @@ namespace Hsinpa.CloudAnchor
 
                 _anchorLocateCriteria = lightHouseAnchorManager.GetAnchorCriteria(anchorIds, LocateStrategy.AnyStrategy);
 
-                await lightHouseAnchorManager.CloudManager.StartSessionAsync();
+                if (lightHouseAnchorManager.CloudManager.IsSessionStarted) {
+                    await Task.Delay(2000);
+
+                    await lightHouseAnchorManager.CloudManager.StartSessionAsync();
+                }
 
                 _cloudWatcher = lightHouseAnchorManager.CreateWatcher(_anchorLocateCriteria);
             }

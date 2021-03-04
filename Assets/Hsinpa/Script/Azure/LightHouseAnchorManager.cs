@@ -94,7 +94,7 @@ namespace Hsinpa.CloudAnchor {
                 }
                 else {
                     if (OnCloudAnchorIsSetUp != null)
-                        OnCloudAnchorIsSetUp(true);
+                        OnCloudAnchorIsSetUp(false);
                 }
             }
             catch {

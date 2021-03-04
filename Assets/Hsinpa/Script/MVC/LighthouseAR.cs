@@ -44,9 +44,13 @@ public class LighthouseAR : Singleton<LighthouseAR>
     }
 
     private void AppStart(bool success) {
-        readyPipeline++;
-        if (targetReadyPipeline <= readyPipeline)
+        if (success)
+            readyPipeline++;
+
+        if (targetReadyPipeline == readyPipeline) {
+            Debug.Log("Game Start");
             Notify(EventFlag.Event.GameStart);
+        }
     }
 
     public void Notify(string entity, params object[] objects)
